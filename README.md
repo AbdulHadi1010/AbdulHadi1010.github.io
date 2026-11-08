@@ -1,8 +1,8 @@
-# abdulhadi1010.github.io/portfolio
+# abdul-hadi.me
 
 Personal site of Abdul Hadi: cloud, DevOps and AI infrastructure engineer.
 
-**Live:** https://abdulhadi1010.github.io/portfolio/
+**Live:** https://abdul-hadi.me (repo: `AbdulHadi1010.github.io`, deployed by GitHub Actions to GitHub Pages)
 
 ## Stack
 
@@ -53,8 +53,7 @@ npm run build      # astro check + static build into dist/
 Push to `main`. The workflow in `.github/workflows/deploy.yml` builds and publishes to
 GitHub Pages. In the repository settings, Pages → Source must be **GitHub Actions**.
 
-To serve from `https://abdulhadi1010.github.io/` (no `/portfolio`), rename the repo to
-`AbdulHadi1010.github.io`. The workflow picks up the new base path by itself.
+The custom domain `abdul-hadi.me` is set in `public/CNAME` and in the repository's Pages settings.
 
 ## SEO and AI visibility
 

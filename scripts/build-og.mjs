@@ -66,7 +66,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
 <text x="70" y="436" font-family="'Segoe UI', Arial, sans-serif" font-style="italic" font-size="26" fill="${TEXT}">and the pipelines that ship to them.</text>
 <line x1="70" y1="540" x2="1130" y2="540" stroke="#c2ddd8"/>
 <text x="70" y="580" font-family="Consolas, monospace" font-size="16" letter-spacing="1.2" fill="${MID}">CKA · AWS SOLUTIONS ARCHITECT · AZURE</text>
-<text x="1130" y="580" text-anchor="end" font-family="Consolas, monospace" font-size="16" letter-spacing="1.2" fill="${MID}">ABDULHADI1010.GITHUB.IO</text>
+<text x="1130" y="580" text-anchor="end" font-family="Consolas, monospace" font-size="16" letter-spacing="1.2" fill="${MID}">ABDUL-HADI.ME</text>
 </svg>`;
 
 await sharp(Buffer.from(svg)).png({ compressionLevel: 9 }).toFile("public/og.png");
