@@ -158,14 +158,17 @@ function buildAtlas(cellPx: number): HTMLCanvasElement {
 function compile(gl: WebGL2RenderingContext, type: number, src: string) {
   const s = gl.createShader(type)!;
   gl.shaderSource(s, src);
-  gl.compileShader(s);
-  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s) ?? "shader");
+  gl.compileShader(s); // status is checked via the program's LINK_STATUS, so this doesn't block
   return s;
 }
 
 export async function mountAsciiGlobe({ canvas, reducedMotion }: Opts) {
   const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, antialias: false });
   if (!gl) return false;
+  // software rasterisers (no GPU) would burn the CPU on this shader: keep the static globe
+  const dbg = gl.getExtension("WEBGL_debug_renderer_info");
+  const renderer = `${dbg ? gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL) : ""} ${gl.getParameter(gl.RENDERER)}`;
+  if (/swiftshader|llvmpipe|software|basic render/i.test(renderer)) return false;
 
   try {
     await document.fonts.load('500 16px "JetBrains Mono Variable"');
@@ -176,7 +179,12 @@ export async function mountAsciiGlobe({ canvas, reducedMotion }: Opts) {
   const prog = gl.createProgram()!;
   gl.attachShader(prog, compile(gl, gl.VERTEX_SHADER, VERT));
   gl.attachShader(prog, compile(gl, gl.FRAGMENT_SHADER, FRAG));
+  // compile in the background where supported, instead of blocking the main thread
+  const par = gl.getExtension("KHR_parallel_shader_compile");
   gl.linkProgram(prog);
+  if (par) {
+    while (!gl.getProgramParameter(prog, par.COMPLETION_STATUS_KHR)) await new Promise((r) => setTimeout(r, 32));
+  }
   if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return false;
   gl.useProgram(prog);
 

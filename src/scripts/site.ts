@@ -33,7 +33,7 @@ function initScroll(): Lenis | null {
   const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 0.9 });
   const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"], a[href*="/#"]').forEach((a) => {
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]:not([data-email-href]), a[href*="/#"]:not([data-email-href])').forEach((a) => {
     a.addEventListener("click", (e) => {
       const id = a.hash;
       const target = id && document.querySelector(id);
@@ -117,10 +117,14 @@ function initTheme() {
 async function initGlobe() {
   const canvas = document.querySelector<HTMLCanvasElement>("[data-ascii-globe]");
   if (!canvas) return;
+  // wait for load + an idle moment so the globe never competes with first paint
+  if (document.readyState !== "complete") await new Promise((r) => window.addEventListener("load", r, { once: true }));
+  await new Promise((r) => ("requestIdleCallback" in window ? requestIdleCallback(r, { timeout: 1500 }) : setTimeout(r, 300)));
   const { mountAsciiGlobe } = await import("./ascii-globe");
   try {
     const ok = await mountAsciiGlobe({ canvas, reducedMotion: reduced });
-    if (!ok) canvas.remove();
+    if (!ok) { canvas.remove(); return; }
+    document.querySelector<HTMLElement>("[data-globe-fallback]")?.classList.add("is-hidden");
   } catch (err) {
     console.warn("ascii globe disabled:", err);
     canvas.remove();

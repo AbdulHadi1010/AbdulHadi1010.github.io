@@ -1,5 +1,6 @@
 ---
-import { logoSvg, marquee } from "../data/logos";
+import { marquee } from "../data/logos";
+import Logo from "./Logo.astro";
 ---
 
 <!-- Scrolling strip right under the hero -->
@@ -9,7 +10,7 @@ import { logoSvg, marquee } from "../data/logos";
       <ul class="flex items-center gap-14 pr-14" aria-hidden={dup === 1 ? "true" : undefined}>
         {marquee.map(([key, name]) => (
           <li class="flex h-9 items-center gap-3 text-text/80" title={name}>
-            <span class="block h-8 w-8 shrink-0" set:html={logoSvg(key)} />
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-[9px] bg-white p-1.5 shadow-[0_0_0_1px_rgba(0,64,90,0.08)]"><Logo k={key} size={24} /></span>
             <span class="whitespace-nowrap font-mono text-[12px] tracking-wide text-muted">{name}</span>
           </li>
         ))}

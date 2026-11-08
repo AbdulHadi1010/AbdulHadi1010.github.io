@@ -6,6 +6,7 @@ const href = (h: string) => (home ? h : `${base}${h}`);
 const nav = [
   { href: "#work", label: "Work" },
   { href: "#stack", label: "Stack" },
+  { href: "#about", label: "About" },
   { href: "#log", label: "Log" },
   { href: "#writing", label: "Writing" },
 ];
@@ -19,7 +20,7 @@ const nav = [
 <header class="notch-wrap pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center" data-notch data-build="nav" data-build-name="<Navbar />">
   <div class="notch pointer-events-auto relative" data-notch-body>
     <div class="flex h-[52px] items-center gap-2 pl-3 pr-2 sm:gap-6 sm:pl-4">
-      <a href={base} class="group flex items-center gap-2.5 pr-1" aria-label={`${profile.name}, home`}>
+      <a href={base} class="group flex items-center gap-2.5 pr-1">
         <span class="grid h-8 w-8 place-items-center rounded-[9px] bg-[#00405a] text-[11px] font-bold leading-none text-white"><span>A<span class="text-[#fc9412]">H</span></span></span>
         <span class="hidden text-[15px] font-semibold tracking-[-0.01em] text-[#00405a] sm:inline">Abdul Hadi</span>
       </a>

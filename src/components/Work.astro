@@ -1,6 +1,6 @@
 ---
 import { projects, stats, moreProjects } from "../data/profile";
-import { logoSvg } from "../data/logos";
+import Logo from "./Logo.astro";
 import SectionHead from "./SectionHead.astro";
 import ProjectVisual from "./ProjectVisual.astro";
 ---
@@ -27,7 +27,7 @@ import ProjectVisual from "./ProjectVisual.astro";
           <div class="mb-6 flex flex-wrap items-center gap-3">
             <span class="flex -space-x-2" aria-hidden="true">
               {p.logos.map((k) => (
-                <span class="grid h-10 w-10 place-items-center rounded-[11px] bg-white p-2 text-[#1b1b1b] shadow-[0_0_0_2px_var(--surface),0_6px_14px_-8px_rgba(0,64,90,0.45)] transition-transform duration-300 group-hover:-translate-y-0.5 [&:nth-child(2)]:group-hover:translate-x-1 [&:nth-child(3)]:group-hover:translate-x-2" set:html={logoSvg(k)} />
+                <span class="grid h-10 w-10 place-items-center rounded-[11px] bg-white p-2 shadow-[0_0_0_2px_var(--surface),0_6px_14px_-8px_rgba(0,64,90,0.45)] transition-transform duration-300 group-hover:-translate-y-0.5 [&:nth-child(2)]:group-hover:translate-x-1 [&:nth-child(3)]:group-hover:translate-x-2"><Logo k={k} size={24} /></span>
               ))}
             </span>
             <span class="rounded-full bg-accent/15 px-3 py-1 text-[12px] font-semibold text-text">{p.kind}</span>
@@ -66,7 +66,7 @@ import ProjectVisual from "./ProjectVisual.astro";
           {g.items.map((it) => (
             <li class="group flex flex-col bg-bg p-6 transition-colors hover:bg-surface">
               <div class="mb-5 flex items-center gap-2">
-                {it.logos.map((k) => <span class="block h-6 w-6 text-text" set:html={logoSvg(k)} />)}
+                {it.logos.map((k) => <span class="grid h-8 w-8 place-items-center rounded-[8px] bg-white p-1.5 shadow-[0_0_0_1px_rgba(0,64,90,0.08)]"><Logo k={k} size={20} /></span>)}
               </div>
               <h4 class="text-[17px] font-medium leading-snug">{it.title}</h4>
               <p class="mt-2 flex-1 text-[14.5px] leading-relaxed text-muted">{it.detail}</p>

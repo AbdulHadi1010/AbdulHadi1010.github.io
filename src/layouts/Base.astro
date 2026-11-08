@@ -1,35 +1,34 @@
 ---
-import "@fontsource/poppins/300.css";
-import "@fontsource/poppins/300-italic.css";
-import "@fontsource/poppins/400.css";
-import "@fontsource/poppins/500.css";
-import "@fontsource/poppins/600.css";
-import "@fontsource/poppins/700.css";
-import "@fontsource/poppins/700-italic.css";
+// Latin subsets only: the site is English, so no Devanagari / Latin-ext downloads
+import "@fontsource/poppins/latin-300.css";
+import "@fontsource/poppins/latin-300-italic.css";
+import "@fontsource/poppins/latin-400.css";
+import "@fontsource/poppins/latin-500.css";
+import "@fontsource/poppins/latin-600.css";
+import "@fontsource/poppins/latin-700.css";
+import "@fontsource/poppins/latin-700-italic.css";
 import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
+import poppins400 from "@fontsource/poppins/files/poppins-latin-400-normal.woff2?url";
+import poppins600 from "@fontsource/poppins/files/poppins-latin-600-normal.woff2?url";
 import { profile } from "../data/profile";
+import { personGraph } from "../data/seo";
 
 interface Props {
   title?: string;
   description?: string;
+  noindex?: boolean;
 }
 const {
-  title = `${profile.name}: ${profile.role}`,
-  description = `${profile.name} designs, builds and hardens cloud platforms: Kubernetes, AWS, Azure, private clouds and AI inference. CKA, AWS Solutions Architect.`,
+  title = "Abdul Hadi | Cloud, DevOps & AI Infrastructure Engineer (CKA)",
+  description = "Abdul Hadi is a Solutions Architect at SazebTech Consulting and a Certified Kubernetes Administrator building Kubernetes, AWS, Azure, private cloud and LLM inference platforms.",
+  noindex = false,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const base = import.meta.env.BASE_URL;
 const og = new URL(`${base.replace(/\/$/, "")}/og.png`, Astro.site);
-const ld = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: profile.name,
-  jobTitle: profile.title,
-  url: canonical.href,
-  sameAs: Object.values(profile.links),
-  knowsAbout: ["Kubernetes", "AWS", "Azure", "Terraform", "DevSecOps", "AI infrastructure"],
-};
+const home = new URL(base, Astro.site).href;
+const ld = personGraph(home);
 ---
 
 <!doctype html>
@@ -39,16 +38,35 @@ const ld = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={profile.name} />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"} />
     <link rel="canonical" href={canonical} />
+    <link rel="preload" href={poppins600} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={poppins400} as="font" type="font/woff2" crossorigin />
+    <link rel="me" href={profile.links.linkedin} />
+    <link rel="me" href={profile.links.github} />
+    <link rel="author" href={`${base}llms.txt`} type="text/plain" title="About Abdul Hadi, for AI assistants" />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
     <meta name="theme-color" content="#021f2c" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#e2f3f0" media="(prefers-color-scheme: light)" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="profile" />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="profile:first_name" content="Abdul" />
+    <meta property="profile:last_name" content="Hadi" />
+    <meta property="profile:username" content="AbdulHadi1010" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={og} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Abdul Hadi, cloud, DevOps and AI infrastructure engineer" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={og} />
+    <link rel="preconnect" href="https://avatars.githubusercontent.com" crossorigin />
     <link rel="sitemap" href={`${base}sitemap-index.xml`} />
     <script is:inline>
       try {
@@ -59,7 +77,8 @@ const ld = {
       // multi-agent build intro: once per visit, never with reduced motion
       try {
         const d = document.documentElement;
-        if (!sessionStorage.getItem("built") && !matchMedia("(prefers-reduced-motion: reduce)").matches && !location.hash) {
+        const bot = navigator.webdriver || /bot|crawl|spider|slurp|google|bing|yandex|baidu|duckduck|gpt|claude|perplexity|anthropic|facebookexternalhit|lighthouse|headless|preview/i.test(navigator.userAgent);
+        if (!bot && !sessionStorage.getItem("built") && !matchMedia("(prefers-reduced-motion: reduce)").matches && !location.hash) {
           d.classList.add("building");
           // safety net: if the intro script never starts, show the page anyway
           setTimeout(() => { if (!d.dataset.agents) d.classList.remove("building"); }, 5000);

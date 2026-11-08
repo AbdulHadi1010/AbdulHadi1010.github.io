@@ -1,0 +1,6 @@
+---
+import { logoUrl, logoName } from "../data/logos";
+interface Props { k: string; size?: number; class?: string; eager?: boolean }
+const { k, size = 32, class: cls = "", eager = false } = Astro.props;
+---
+<img src={logoUrl(k)} alt={logoName[k] ? `${logoName[k]} logo` : ""} width={size} height={size} loading={eager ? "eager" : "lazy"} decoding="async" class={`block h-full w-full object-contain ${cls}`} />

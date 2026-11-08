@@ -10,7 +10,12 @@ export default defineConfig({
   site,
   base,
   trailingSlash: "ignore",
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // lastmod tells crawlers when to come back
+      serialize: (item) => ({ ...item, lastmod: new Date().toISOString(), changefreq: "monthly", priority: 1.0 }),
+    }),
+  ],
   vite: { plugins: [tailwindcss()] },
   build: { inlineStylesheets: "auto" },
 });

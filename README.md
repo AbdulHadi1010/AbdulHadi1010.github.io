@@ -55,3 +55,23 @@ GitHub Pages. In the repository settings, Pages → Source must be **GitHub Acti
 
 To serve from `https://abdulhadi1010.github.io/` (no `/portfolio`), rename the repo to
 `AbdulHadi1010.github.io`. The workflow picks up the new base path by itself.
+
+## SEO and AI visibility
+
+What the site does:
+
+- **Title / H1 / About** lead with "Abdul Hadi" plus role, employer and certifications, in plain factual sentences that search snippets and AI answers can quote.
+- **Structured data** (`src/data/seo.ts`): one JSON-LD graph with `WebSite`, `ProfilePage`, `Person` (job, employer, education, CKA/AWS/Azure credentials, skills, `sameAs` LinkedIn/GitHub/Medium/YouTube), the *Secure but Broken?* paper (DOI), GitHub projects and Medium posts, all linked to the same person.
+- **`/llms.txt`**: plain-text profile for AI assistants, generated from the same data.
+- **`/robots.txt`**: explicitly allows Googlebot, Bingbot, GPTBot, OAI-SearchBot, ClaudeBot, PerplexityBot and others; points to the sitemap (with `lastmod`).
+- **Crawlers skip the agent intro**, so the rendered DOM they index is the finished page.
+- `rel="me"` links to LinkedIn and GitHub; Open Graph `profile` tags; 404 is `noindex`.
+
+Lighthouse (production build, local): desktop 98 / 100 / 100 / 100, mobile 72 / 100 / 100 / 100 (performance / accessibility / best practices / SEO).
+
+After publishing, these steps are yours (they need your accounts):
+
+1. **Google Search Console**: add the site URL, verify (HTML tag or DNS), submit `sitemap-index.xml`, then "Request indexing" for the homepage.
+2. **Bing Webmaster Tools**: import from Search Console. Bing's index feeds ChatGPT search and Copilot.
+3. **Link back to the site** from LinkedIn (Contact info → Website, and a Featured link), your GitHub profile "Website" field, Medium bio and YouTube "About". Consistent links from profiles Google already trusts are what tie the name to this page.
+4. Optional: a custom domain (e.g. `abdulhadi.dev`) and a real headshot to replace the GitHub avatar used in the structured data.

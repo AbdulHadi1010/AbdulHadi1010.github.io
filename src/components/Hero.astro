@@ -1,10 +1,13 @@
 ---
 import { profile } from "../data/profile";
+import { asciiGlobe } from "../data/globe-ascii";
+const staticGlobe = asciiGlobe(72, 36);
 const [first] = profile.rotating;
 ---
 
 <section class="relative isolate flex min-h-[100svh] flex-col overflow-hidden pt-14" aria-labelledby="hero-title">
   <div class="hairline-grid pointer-events-none absolute inset-0 -z-20 opacity-60"></div>
+  <pre data-globe-fallback aria-hidden="true" class="globe-fallback pointer-events-none absolute -z-10 hidden select-none md:block">{staticGlobe}</pre>
   <canvas data-ascii-globe data-build="globe" data-build-name="globe.glsl" class="absolute inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
   <div class="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_82%,transparent)_34%,transparent_62%)] max-md:bg-[linear-gradient(180deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_75%,transparent)_45%,transparent_70%)]"></div>
 
@@ -15,8 +18,9 @@ const [first] = profile.rotating;
     </p>
 
     <h1 id="hero-title" class="rise max-w-[14ch] font-serif text-[clamp(2.6rem,7vw,6.2rem)] leading-[1.02]" style="--d:200ms">
+      <span class="mb-4 block text-[0.3em] font-semibold leading-tight tracking-[-0.01em] text-muted">Abdul Hadi</span>
       Engineering infrastructure for
-      <span class="block text-accent"><span data-rotate={JSON.stringify(profile.rotating)}>{first}</span><span class="caret font-light">|</span></span>
+      <span class="block h-[1.05em] whitespace-nowrap text-accent"><span data-rotate={JSON.stringify(profile.rotating)}>{first}</span><span class="caret font-light">|</span></span>
     </h1>
 
     <p class="rise tagline mt-7 max-w-[44ch] text-[1.1rem] sm:text-[1.3rem]" style="--d:350ms">
@@ -27,8 +31,8 @@ const [first] = profile.rotating;
       <a href="#work" class="btn-brand text-[1.05rem]">
         Explore my work <span aria-hidden="true">→</span>
       </a>
-      <button type="button" data-copy-email class="btn-ghost text-[14px] font-medium" aria-label="Copy my email address">
-        <span data-copy-label data-email>Email me</span>
+      <button type="button" data-copy-email class="btn-ghost text-[14px] font-medium" title="Copy email address">
+        <span data-copy-label data-email class="inline-block min-w-[15.8rem] text-left">Email me</span>
         <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" class="text-muted"><rect x="4.5" y="4.5" width="9" height="9" fill="none" stroke="currentColor" /><path d="M2.5 11V2.5H11" fill="none" stroke="currentColor" /></svg>
       </button>
     </div>

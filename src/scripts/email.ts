@@ -25,7 +25,7 @@ export function initEmail() {
   document.querySelectorAll<HTMLAnchorElement>("[data-email-href]").forEach((a) => {
     const arm = () => { a.href = `mailto:${addr}`; };
     ["pointerenter", "focus", "touchstart"].forEach((ev) => a.addEventListener(ev, arm, { once: true, passive: true }));
-    a.addEventListener("click", (e) => { if (!a.getAttribute("href")?.startsWith("mailto:")) { e.preventDefault(); arm(); window.location.href = a.href; } });
+    a.addEventListener("click", (e) => { if (!a.getAttribute("href")?.startsWith("mailto:")) { e.preventDefault(); e.stopPropagation(); arm(); window.location.href = a.href; } });
   });
 
   // copy buttons

@@ -13,7 +13,7 @@ const data = {
 
 <div class="band-navy">
 <section id="contact" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="contact-title">
-  <SectionHead id="contact-title" index="05" label="Contact" title="Have a cluster that <em>needs work?</em>" />
+  <SectionHead id="contact-title" index="06" label="Contact" title="Have a cluster that <em>needs work?</em>" />
 
   <div class="grid grid-cols-1 gap-12 md:grid-cols-12">
     <div data-reveal class="md:col-span-5">
@@ -21,8 +21,8 @@ const data = {
         Platform builds, cloud migrations, Kubernetes hardening, or getting a model to serve fast on hardware you already pay for. Email is quickest.
       </p>
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        <a data-email-href class="link-u whitespace-nowrap text-[clamp(1.05rem,1.7vw,1.35rem)] font-semibold" data-email>Email me</a>
-        <button type="button" data-copy-email class="rounded-full border border-line px-3 py-1 text-[12px] font-medium text-muted transition-colors hover:border-accent hover:text-text" aria-label="Copy my email address"><span data-copy-label>Copy</span></button>
+        <a data-email-href href="#contact" class="link-u whitespace-nowrap text-[clamp(1.05rem,1.7vw,1.35rem)] font-semibold" data-email>Email me</a>
+        <button type="button" data-copy-email class="rounded-full border border-line px-3 py-1 text-[12px] font-medium text-muted transition-colors hover:border-accent hover:text-text" title="Copy email address"><span data-copy-label>Copy</span><span class="sr-only"> email address</span></button>
       </div>
       <ul class="mt-10 grid grid-cols-2 gap-px border border-line bg-line">
         {Object.entries(profile.links).map(([k, v]) => (

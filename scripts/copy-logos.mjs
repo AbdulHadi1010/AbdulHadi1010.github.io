@@ -5,7 +5,7 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const out = "src/assets/logos";
+const out = "public/logos"; // served as cached files, not inlined
 fs.mkdirSync(out, { recursive: true });
 
 const dev = (slug, file = `${slug}-original.svg`) => ({ from: `node_modules/devicon/icons/${slug}/${file}` });
@@ -49,8 +49,6 @@ export const LOGOS = {
   ollama: dev("ollama"),
 };
 
-const INK_FOLLOWS_THEME = new Set(["aws", "ollama", "kafka", "sonarqube", "openstack"]);
-
 const siData = JSON.parse(fs.readFileSync("node_modules/simple-icons/data/simple-icons.json", "utf8"));
 const siList = Array.isArray(siData) ? siData : siData.icons;
 const hexFor = (slug) => {
@@ -72,10 +70,6 @@ for (const [name, src] of Object.entries(LOGOS)) {
     .replace(/id="([^"]+)"/g, `id="${name}-$1"`)
     .replace(/url\(#([^)]+)\)/g, `url(#${name}-$1)`)
     .replace(/href="#([^"]+)"/g, `href="#${name}-$1"`);
-  // near-black ink follows the theme so the mark stays legible on dark backgrounds
-  if (INK_FOLLOWS_THEME.has(name)) {
-    svg = svg.replace(/#(?:[0-2][0-9a-f]{5}|[0-2]{3})\b/gi, "currentColor");
-  }
   fs.writeFileSync(path.join(out, `${name}.svg`), svg.trim() + "\n");
 }
 console.log(`copied ${Object.keys(LOGOS).length} logos to ${out}`);

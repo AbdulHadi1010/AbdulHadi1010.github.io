@@ -257,6 +257,8 @@ export function runAgentBuild(lenis: Lenis | null) {
   const parts = (sec: HTMLElement | null) =>
     sec ? ([...sec.children].flatMap((c) => (c.matches(".grid") && sec.id === "log" ? [...c.children] : [c])) as HTMLElement[]) : [];
   add("Toolchain", [tint], parts(q("#stack")));
+  const aboutSec = q("#about");
+  add("About", [aboutSec], aboutSec ? ([aboutSec.querySelector(":scope > [data-reveal]"), ...(aboutSec.querySelector(":scope > .grid")?.children ?? [])] as HTMLElement[]) : []);
   add("Deploy log", [logSec], parts(logSec));
   add("Writing", [writingSec], parts(writingSec));
   const contact = q("#contact");
