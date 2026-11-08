@@ -182,3 +182,34 @@ export const writing = [
   { date: "2025-04-11", title: "Thales CipherTrust Manager on a private cloud", href: "https://medium.com/@abdul-hadi/thales-ciphertrust-manager-installation-on-private-cloud-guide-2025-898afb7536d3" },
   { date: "2025-04-10", title: "IBM Storage Ceph installation guide", href: "https://medium.com/@abdul-hadi/ibmibm-storage-ceph-installation-guide-2025-a4943660740a" },
 ];
+
+// From blog.stryxon.com/projects, filtered to cloud, Kubernetes, containers,
+// security and Cloudera work. Shown as a compact index under the featured work.
+export const moreProjects: { group: string; items: { title: string; detail: string; tags: string[]; logos: string[] }[] }[] = [
+  {
+    group: "Kubernetes & containers",
+    items: [
+      { title: "Multi-node Kubernetes cluster", detail: "Fault-tolerant kubeadm cluster with RBAC, persistent storage and Prometheus/Grafana observability.", tags: ["kubeadm", "RBAC", "Prometheus"], logos: ["kubernetes", "prometheus", "grafana"] },
+      { title: "OpenShift for enterprise apps", detail: "Red Hat OpenShift clusters for secure multi-tenant workloads, with autoscaling and strict security contexts.", tags: ["OpenShift", "SCC", "Multi-tenant"], logos: ["openshift", "redhat"] },
+      { title: "Cluster bootstrapping with Ansible", detail: "Playbooks that provision networking, security and monitoring the same way on every node. Setup time down 80%.", tags: ["Ansible", "Terraform"], logos: ["ansible", "terraform", "kubernetes"] },
+      { title: "Log analytics on Kubernetes", detail: "Elasticsearch, Fluentd and Kibana on Kubernetes, with Grafana dashboards for cluster health.", tags: ["EFK", "Grafana"], logos: ["elasticsearch", "kibana", "grafana"] },
+      { title: "Cassandra & Spark on Kubernetes", detail: "Cassandra StatefulSets and Spark workers with tuned resource limits and HDFS integration.", tags: ["StatefulSets", "Spark"], logos: ["cassandra", "spark", "kubernetes"] },
+    ],
+  },
+  {
+    group: "Cloud, DevOps & security",
+    items: [
+      { title: "DeepSeek & Mistral on AWS", detail: "Private LLM hosting on c5.2xlarge (CPU) and g4dn.xlarge (GPU), with Ollama compiled for the host CPU.", tags: ["EC2", "g4dn", "Ollama"], logos: ["aws", "ollama"] },
+      { title: "Jenkins CI/CD with Docker", detail: "Automated test and release pipeline with Jenkins, Docker and GitHub, for consistent production builds.", tags: ["Jenkins", "Docker"], logos: ["jenkins", "docker", "github-actions"] },
+      { title: "Data security with IBM Guardium", detail: "Database activity monitoring across an enterprise fleet: real-time audit for GDPR and PCI DSS, and masking with no app changes.", tags: ["DAM", "GDPR", "PCI DSS"], logos: ["linux", "postgresql"] },
+    ],
+  },
+  {
+    group: "Cloudera & big data",
+    items: [
+      { title: "Cloudera CDP health check & tuning", detail: "Diagnosed HDFS and YARN bottlenecks on CDP clusters and tuned them for stability and faster queries.", tags: ["CDP", "HDFS", "YARN"], logos: ["cloudera", "hadoop"] },
+      { title: "Cloudera upgrade on Azure Data Lake", detail: "Migrated and upgraded Cloudera workloads to Azure Data Lake under enterprise governance.", tags: ["Azure", "ADLS"], logos: ["cloudera", "azure"] },
+      { title: "IBM Storage Ceph", detail: "Multi-node Ceph for block and object storage, CRUSH maps tuned for throughput, 99.99% uptime.", tags: ["Ceph", "CRUSH", "HA"], logos: ["ceph", "redhat"] },
+    ],
+  },
+];

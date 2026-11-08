@@ -1,5 +1,6 @@
 ---
-import { projects, stats } from "../data/profile";
+import { projects, stats, moreProjects } from "../data/profile";
+import { logoSvg } from "../data/logos";
 import SectionHead from "./SectionHead.astro";
 ---
 
@@ -49,4 +50,30 @@ import SectionHead from "./SectionHead.astro";
       </li>
     ))}
   </ol>
+
+  <div class="mt-24">
+    <div data-reveal class="mb-8 flex items-end justify-between gap-6">
+      <h3 class="font-serif text-[clamp(1.6rem,3vw,2.4rem)] leading-tight">More from the field</h3>
+      <a href="https://blog.stryxon.com/projects" target="_blank" rel="noopener" class="label shrink-0 hover:!text-text" data-scramble>Full list ↗</a>
+    </div>
+    {moreProjects.map((g) => (
+      <div class="mb-12">
+        <p data-reveal class="label mb-4">{g.group}</p>
+        <ul data-reveal class="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 xl:grid-cols-3">
+          {g.items.map((it, i) => (
+            <li class="group flex flex-col bg-bg p-6 transition-colors hover:bg-surface">
+              <div class="mb-5 flex items-center gap-2">
+                {it.logos.map((k) => <span class="block h-6 w-6 text-text" set:html={logoSvg(k)} />)}
+              </div>
+              <h4 class="text-[17px] font-medium leading-snug">{it.title}</h4>
+              <p class="mt-2 flex-1 text-[14.5px] leading-relaxed text-muted">{it.detail}</p>
+              <p class="mt-4 font-mono text-[11px] text-muted/80">{it.tags.join(" · ")}</p>
+            </li>
+          ))}
+          {Array.from({ length: (2 - (g.items.length % 2)) % 2 }).map(() => <li aria-hidden="true" class="hidden bg-bg md:block xl:hidden" />)}
+          {Array.from({ length: (3 - (g.items.length % 3)) % 3 }).map(() => <li aria-hidden="true" class="hidden bg-bg xl:block" />)}
+        </ul>
+      </div>
+    ))}
+  </div>
 </section>

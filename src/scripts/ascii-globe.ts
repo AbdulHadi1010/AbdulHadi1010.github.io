@@ -269,7 +269,7 @@ export async function mountAsciiGlobe({ canvas, reducedMotion }: Opts) {
   const ro = new ResizeObserver(resize);
   ro.observe(canvas);
   const mo = new MutationObserver(setColors);
-  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  mo.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "data-palette"] });
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", setColors);
 
   gl.enable(gl.BLEND);

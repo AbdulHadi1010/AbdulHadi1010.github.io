@@ -54,6 +54,66 @@
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
+/* ── brand palettes (picked in /lab, stored in localStorage) ─────────────── */
+:root[data-palette="linkedin"] {
+  --bg: #f4f2ee; --surface: #ffffff; --line: #dedbd4; --text: #191919;
+  --muted: #5e5e5e; --accent: #0a66c2; --accent-ink: #ffffff; --ascii-ink: #c3ccd6;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="linkedin"]:not([data-theme="light"]) {
+    --bg: #1b1f23; --surface: #22272c; --line: #343a40; --text: #e9e9e9;
+    --muted: #a0a7ad; --accent: #70b5f9; --accent-ink: #1b1f23; --ascii-ink: #3a434d;
+  }
+}
+:root[data-palette="linkedin"][data-theme="dark"] {
+  --bg: #1b1f23; --surface: #22272c; --line: #343a40; --text: #e9e9e9;
+  --muted: #a0a7ad; --accent: #70b5f9; --accent-ink: #1b1f23; --ascii-ink: #3a434d;
+}
+:root[data-palette="navy"] {
+  --bg: #eef3f8; --surface: #e2ebf4; --line: #c9d8e8; --text: #0b1a2b;
+  --muted: #4d6580; --accent: #0a66c2; --accent-ink: #ffffff; --ascii-ink: #b9cce0;
+}
+@media (prefers-color-scheme: dark) {
+  :root[data-palette="navy"]:not([data-theme="light"]) {
+    --bg: #071425; --surface: #0c1f36; --line: #17314f; --text: #e8f0f8;
+    --muted: #8fa6bf; --accent: #70b5f9; --accent-ink: #071425; --ascii-ink: #1d3a5c;
+  }
+}
+:root[data-palette="navy"][data-theme="dark"] {
+  --bg: #071425; --surface: #0c1f36; --line: #17314f; --text: #e8f0f8;
+  --muted: #8fa6bf; --accent: #70b5f9; --accent-ink: #071425; --ascii-ink: #1d3a5c;
+}
+
+/* ── type systems (picked in /lab) ───────────────────────────────────────── */
+:root { --display-weight: 400; --em-family: inherit; }
+:root[data-font="supaste"] {
+  --font-serif: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, monospace;
+  --display-weight: 650; --em-family: "Instrument Serif", Georgia, serif;
+}
+:root[data-font="grotesk"] {
+  --font-serif: "Space Grotesk Variable", ui-sans-serif, sans-serif;
+  --font-sans: "Space Grotesk Variable", ui-sans-serif, sans-serif;
+  --font-mono: "Space Mono", ui-monospace, monospace;
+  --display-weight: 500;
+}
+:root[data-font="plex"] {
+  --font-serif: "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --display-weight: 500;
+}
+:root[data-font="bricolage"] {
+  --font-serif: "Bricolage Grotesque Variable", ui-sans-serif, sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, sans-serif;
+  --font-mono: "Martian Mono Variable", ui-monospace, monospace;
+  --display-weight: 650;
+}
+h1.font-serif, h2.font-serif, h3.font-serif, dd.font-serif, a.font-serif { font-weight: var(--display-weight); }
+.font-serif em { font-family: var(--em-family); font-weight: 400; }
+:root:not([data-font]) .font-serif em, :root[data-font="editorial"] .font-serif em { font-style: italic; }
+
 /* ── base ────────────────────────────────────────────────────────────────── */
 html {
   background: var(--bg);

@@ -1,32 +1,116 @@
 ---
 import { profile } from "../data/profile";
 const base = import.meta.env.BASE_URL;
+const home = Astro.url.pathname.replace(/\/$/, "") === base.replace(/\/$/, "");
+const href = (h: string) => (home ? h : `${base}${h}`);
 const nav = [
   { href: "#work", label: "Work" },
+  { href: "#stack", label: "Stack" },
   { href: "#log", label: "Log" },
   { href: "#writing", label: "Writing" },
-  { href: "#contact", label: "Contact" },
 ];
 ---
 
-<header class="fixed inset-x-0 top-0 z-50 border-b border-line/60 bg-bg/75 backdrop-blur-md">
-  <div class="mx-auto flex h-14 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-8">
-    <a href={base} class="group flex items-center gap-2.5" aria-label={`${profile.name}, home`}>
-      <span class="grid h-7 w-7 place-items-center border border-text font-mono text-[11px] font-semibold leading-none transition-colors group-hover:bg-text group-hover:text-bg">AH</span>
-      <span class="hidden font-mono text-[13px] sm:inline" data-scramble>abdul.hadi</span>
-    </a>
+<!--
+  Navigation modelled on supaste.com: a solid tab hanging from the top edge with
+  18px bottom radii and concave "shoulders" where it meets the viewport edge.
+  Colours are inverted from the page so it reads as one object in either theme.
+-->
+<header class="notch-wrap pointer-events-none fixed inset-x-0 top-0 z-50 flex justify-center" data-notch>
+  <div class="notch pointer-events-auto relative" data-notch-body>
+    <div class="flex h-[52px] items-center gap-2 pl-3 pr-2 sm:gap-6 sm:pl-4">
+      <a href={base} class="group flex items-center gap-2.5 pr-1" aria-label={`${profile.name}, home`}>
+        <span class="grid h-7 w-7 place-items-center rounded-[7px] bg-accent font-mono text-[11px] font-bold leading-none text-accent-ink">AH</span>
+        <span class="hidden text-[15px] font-semibold tracking-[-0.01em] sm:inline">Abdul Hadi</span>
+      </a>
 
-    <nav aria-label="Primary" class="flex items-center gap-3.5 sm:gap-7">
-      {nav.map((n) => (
-        <a href={n.href} class="label !text-text/80 hover:!text-text" data-scramble>{n.label}</a>
-      ))}
-    </nav>
+      <nav aria-label="Primary" class="hidden items-center gap-1 md:flex">
+        {nav.map((n) => (
+          <a href={href(n.href)} class="rounded-full px-3 py-1.5 text-[14px] opacity-75 transition-[opacity,background] hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100">{n.label}</a>
+        ))}
+        <a href={`${base}lab/`} class="rounded-full px-3 py-1.5 text-[14px] opacity-75 transition-[opacity,background] hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100">Lab</a>
+      </nav>
 
-    <div class="flex items-center gap-4">
-      <span class="label hidden md:inline">PKT <span data-clock={profile.timezone}>--:--</span></span>
-      <button type="button" data-theme-toggle class="grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-text hover:text-text" aria-label="Toggle colour theme">
-        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" /><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" /></svg>
-      </button>
+      <div class="ml-auto flex items-center gap-1.5 sm:ml-0">
+        <span class="hidden px-2 font-mono text-[11px] tracking-wider opacity-60 lg:inline">PKT <span data-clock={profile.timezone}>--:--</span></span>
+        <button type="button" data-theme-toggle class="grid h-8 w-8 place-items-center rounded-full opacity-75 transition hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100" aria-label="Toggle colour theme">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" /><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" /></svg>
+        </button>
+        <a href={href("#contact")} class="hidden items-center gap-2 rounded-full bg-[var(--notch-ink)] px-4 py-2 text-[14px] font-medium text-[var(--notch)] transition-transform hover:scale-[1.03] sm:inline-flex">
+          Hire me <span aria-hidden="true">→</span>
+        </a>
+        <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" class="grid h-8 w-8 place-items-center rounded-full md:hidden" aria-label="Open menu">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path data-menu-icon d="M2 5h12M2 11h12" stroke="currentColor" stroke-width="1.5" fill="none" /></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.2,0.7,0.2,1)] md:hidden" data-menu>
+      <nav aria-label="Mobile" class="overflow-hidden">
+        <ul class="flex flex-col gap-0.5 px-3 pb-4 pt-1">
+          {[...nav, { href: "#contact", label: "Contact" }].map((n) => (
+            <li><a href={href(n.href)} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em]" data-menu-link>{n.label}</a></li>
+          ))}
+          <li><a href={`${base}lab/`} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em]" data-menu-link>Lab</a></li>
+        </ul>
+      </nav>
     </div>
   </div>
 </header>
+
+<style>
+  .notch {
+    --notch: var(--text);
+    --notch-ink: var(--bg);
+    --r: 18px;
+    background: var(--notch);
+    color: var(--notch-ink);
+    border-radius: 0 0 var(--r) var(--r);
+    width: min(860px, calc(100vw - 2 * var(--r) - 8px));
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+    box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.45);
+  }
+  /* concave shoulders: a square with a radial cut-out on each side */
+  .notch::before,
+  .notch::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: var(--r);
+    height: var(--r);
+    background: radial-gradient(circle at 0 100%, transparent calc(var(--r) - 0.5px), var(--notch) var(--r));
+  }
+  .notch::before { right: 100%; transform: scaleX(-1); }
+  .notch::after { left: 100%; }
+  @media (max-width: 767px) {
+    .notch { width: calc(100vw - 2 * var(--r) - 8px); }
+  }
+  [data-notch].is-hidden .notch { transform: translateY(-110%); }
+  [data-menu].is-open { grid-template-rows: 1fr; }
+</style>
+
+<script>
+  const wrap = document.querySelector<HTMLElement>("[data-notch]")!;
+  const menu = document.querySelector<HTMLElement>("[data-menu]")!;
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]")!;
+  const icon = document.querySelector<SVGPathElement>("[data-menu-icon]")!;
+
+  const setOpen = (open: boolean) => {
+    menu.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+    icon.setAttribute("d", open ? "M3 3l10 10M13 3L3 13" : "M2 5h12M2 11h12");
+  };
+  toggle.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
+  menu.querySelectorAll("[data-menu-link]").forEach((a) => a.addEventListener("click", () => setOpen(false)));
+  document.addEventListener("keydown", (e) => e.key === "Escape" && setOpen(false));
+
+  // tuck away while scrolling down, return on scroll up
+  let last = window.scrollY;
+  window.addEventListener("scroll", () => {
+    const y = window.scrollY;
+    const down = y > last && y > 240 && !menu.classList.contains("is-open");
+    wrap.classList.toggle("is-hidden", down);
+    last = y;
+  }, { passive: true });
+</script>

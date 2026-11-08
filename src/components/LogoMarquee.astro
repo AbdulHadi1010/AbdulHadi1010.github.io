@@ -1,0 +1,28 @@
+---
+import { logoSvg, marquee } from "../data/logos";
+---
+
+<!-- Scrolling strip right under the hero -->
+<div class="relative overflow-hidden border-y border-line py-6" aria-label="Platforms I work with">
+  <div class="marquee flex w-max items-center" data-marquee>
+    {[0, 1].map((dup) => (
+      <ul class="flex items-center gap-14 pr-14" aria-hidden={dup === 1 ? "true" : undefined}>
+        {marquee.map(([key, name]) => (
+          <li class="flex h-9 items-center gap-3 text-text/80" title={name}>
+            <span class="block h-8 w-8 shrink-0" set:html={logoSvg(key)} />
+            <span class="whitespace-nowrap font-mono text-[12px] tracking-wide text-muted">{name}</span>
+          </li>
+        ))}
+      </ul>
+    ))}
+  </div>
+  <div class="pointer-events-none absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-bg to-transparent"></div>
+  <div class="pointer-events-none absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-bg to-transparent"></div>
+</div>
+
+<style>
+  .marquee { animation: scroll-x 60s linear infinite; }
+  .marquee:hover { animation-play-state: paused; }
+  @keyframes scroll-x { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
+</style>

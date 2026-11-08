@@ -3,6 +3,16 @@ import "@fontsource/instrument-serif/400.css";
 import "@fontsource/instrument-serif/400-italic.css";
 import "@fontsource-variable/instrument-sans";
 import "@fontsource-variable/jetbrains-mono";
+import "@fontsource-variable/geist";
+import "@fontsource-variable/geist-mono";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource/space-mono/400.css";
+import "@fontsource/ibm-plex-sans/400.css";
+import "@fontsource/ibm-plex-sans/500.css";
+import "@fontsource/ibm-plex-sans/400-italic.css";
+import "@fontsource/ibm-plex-mono/400.css";
+import "@fontsource-variable/bricolage-grotesque";
+import "@fontsource-variable/martian-mono";
 import "../styles/global.css";
 import { profile } from "../data/profile";
 
@@ -50,7 +60,12 @@ const ld = {
     <script is:inline>
       try {
         const t = localStorage.getItem("theme");
-        if (t === "light" || t === "dark") document.documentElement.dataset.theme = t;
+        const d = document.documentElement;
+        if (t === "light" || t === "dark") d.dataset.theme = t;
+        const f = localStorage.getItem("font");
+        if (f && /^[a-z]+$/.test(f)) d.dataset.font = f;
+        const p = localStorage.getItem("palette");
+        if (p && /^[a-z]+$/.test(p)) d.dataset.palette = p;
       } catch {}
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />

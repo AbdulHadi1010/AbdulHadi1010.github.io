@@ -1,0 +1,237 @@
+---
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { profile } from "../data/profile";
+import { SCENES } from "../scripts/ascii-engine";
+
+const base = import.meta.env.BASE_URL;
+const scenes = [{ key: "globe", label: "Globe", blurb: "The current hero: a ray-traced Earth with real coastlines, region nodes and packets on meridians." }, ...Object.entries(SCENES).map(([key, s]) => ({ key, label: s.label, blurb: s.blurb }))];
+const fonts = [
+  { key: "editorial", label: "Editorial", note: "Instrument Serif · Instrument Sans · JetBrains Mono" },
+  { key: "supaste", label: "Supaste mix", note: "Geist bold + Instrument Serif italic · Geist Mono" },
+  { key: "grotesk", label: "Grotesk", note: "Space Grotesk · Space Mono" },
+  { key: "plex", label: "IBM Plex", note: "IBM Plex Sans · IBM Plex Mono" },
+  { key: "bricolage", label: "Bricolage", note: "Bricolage Grotesque · Geist · Martian Mono" },
+];
+const palettes = [
+  { key: "mint", label: "Mint", swatch: ["#0b0b0a", "#3ef0a8", "#ece9e2"] },
+  { key: "linkedin", label: "LinkedIn", swatch: ["#1b1f23", "#70b5f9", "#0a66c2"] },
+  { key: "navy", label: "LinkedIn navy", swatch: ["#071425", "#70b5f9", "#e8f0f8"] },
+];
+---
+
+<Base title="Lab · Abdul Hadi" description="Design experiments for abdulhadi's portfolio: ASCII scenes, type systems, brand palettes and a real-time 3D GPU.">
+  <Header />
+  <main id="main">
+    <!-- 1. hero preview -->
+    <section class="relative isolate flex min-h-[100svh] flex-col overflow-hidden pt-14" aria-labelledby="lab-title" data-lab-hero>
+      <div class="hairline-grid pointer-events-none absolute inset-0 -z-20 opacity-60"></div>
+      <canvas data-lab-globe class="absolute inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
+      <canvas data-lab-ascii class="absolute inset-0 -z-10 hidden h-full w-full" aria-hidden="true"></canvas>
+      <div class="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_82%,transparent)_34%,transparent_62%)] max-md:bg-[linear-gradient(180deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_75%,transparent)_45%,transparent_70%)]"></div>
+
+      <div class="mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-4 py-16 sm:px-8">
+        <p class="label mb-8 flex items-center gap-2.5"><span class="live-dot"></span> Lab · try it, then keep what you like</p>
+        <h1 id="lab-title" class="max-w-[15ch] font-serif text-[clamp(2.9rem,8.2vw,7.4rem)] leading-[0.95] tracking-[-0.02em]">
+          I build infrastructure <em>for</em>
+          <span class="block font-mono text-[0.62em] leading-[1.25] tracking-[-0.04em] text-accent"><span data-rotate={JSON.stringify(profile.rotating)}>{profile.rotating[0]}</span><span class="caret">_</span></span>
+        </h1>
+        <p class="mt-8 max-w-[46ch] text-[1.05rem] text-muted sm:text-lg" data-scene-blurb>{scenes[0].blurb}</p>
+      </div>
+
+      <!-- control dock -->
+      <div class="mx-auto mb-6 w-[min(1100px,calc(100%-2rem))] rounded-2xl border border-line bg-bg/85 p-3 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.6)] backdrop-blur-md">
+        <div class="grid gap-3 lg:grid-cols-[auto_1fr_auto]">
+          <fieldset class="min-w-0">
+            <legend class="label mb-1.5 px-1">Hero scene</legend>
+            <div class="flex flex-wrap gap-1" role="radiogroup">
+              {scenes.map((s, i) => (
+                <button type="button" role="radio" aria-checked={i === 0 ? "true" : "false"} data-scene={s.key} class="seg">{s.label}</button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset class="min-w-0">
+            <legend class="label mb-1.5 px-1">Typeface</legend>
+            <div class="flex flex-wrap gap-1" role="radiogroup">
+              {fonts.map((f) => (
+                <button type="button" role="radio" aria-checked="false" data-font-pick={f.key} title={f.note} class="seg">{f.label}</button>
+              ))}
+            </div>
+          </fieldset>
+          <fieldset class="min-w-0">
+            <legend class="label mb-1.5 px-1">Colour</legend>
+            <div class="flex flex-wrap gap-1" role="radiogroup">
+              {palettes.map((p) => (
+                <button type="button" role="radio" aria-checked="false" data-palette-pick={p.key} class="seg inline-flex items-center gap-2">
+                  <span class="flex">{p.swatch.map((c) => <span class="-ml-1 h-3 w-3 rounded-full border border-black/20 first:ml-0" style={`background:${c}`}></span>)}</span>
+                  {p.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        </div>
+        <p class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line px-1 pt-3 text-[13px] text-muted">
+          <span>Typeface and colour are saved in this browser and apply to every page. <span class="font-mono text-[12px]" data-font-note></span></span>
+          <a href={base} class="font-medium text-text underline decoration-line underline-offset-4 hover:decoration-current">See the whole site like this →</a>
+        </p>
+      </div>
+    </section>
+
+    <!-- 2. scenes side by side -->
+    <section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8" aria-labelledby="scenes-title">
+      <div class="mb-12 grid grid-cols-1 gap-6 border-t border-line pt-5 md:grid-cols-12">
+        <p class="label md:col-span-3"><span class="text-accent">A</span> / New ASCII scenes</p>
+        <h2 id="scenes-title" class="font-serif text-[clamp(2.2rem,5vw,4.2rem)] leading-[1] tracking-[-0.015em] md:col-span-9">GPU, cluster, model. <em>All in characters.</em></h2>
+      </div>
+      <div class="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-3">
+        {Object.entries(SCENES).map(([key, s]) => (
+          <figure class="relative bg-bg">
+            <canvas data-panel={key} class="block aspect-square w-full" aria-hidden="true"></canvas>
+            <figcaption class="border-t border-line p-5">
+              <p class="label mb-2 text-accent">{s.label}</p>
+              <p class="text-[14.5px] leading-relaxed text-muted">{s.blurb}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      <p class="mt-4 text-[13px] text-muted">Each scene is a signed-distance model ray-marched on the GPU at one sample per character cell, then drawn with the same glyph atlas as the globe. Move your pointer over a panel.</p>
+    </section>
+
+    <!-- 3. real-time 3D -->
+    <section class="mx-auto max-w-[1320px] px-4 pb-24 sm:px-8" aria-labelledby="gpu3d-title">
+      <div class="mb-12 grid grid-cols-1 gap-6 border-t border-line pt-5 md:grid-cols-12">
+        <p class="label md:col-span-3"><span class="text-accent">B</span> / Real-time 3D</p>
+        <h2 id="gpu3d-title" class="font-serif text-[clamp(2.2rem,5vw,4.2rem)] leading-[1] tracking-[-0.015em] md:col-span-9">The hardware <em>under the work.</em></h2>
+      </div>
+      <div class="gpu-stage relative overflow-hidden rounded-3xl border border-line bg-surface" data-gpu-stage>
+        <canvas data-gpu3d class="block h-[min(70vh,640px)] w-full" aria-label="Rotating 3D model of a GPU package with HBM memory stacks"></canvas>
+        <div class="progressive-blur" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="pointer-events-none absolute left-6 top-6 max-w-sm">
+          <p class="label mb-2">fig. B · ray-marched, no textures</p>
+          <p class="text-[15px] leading-relaxed text-muted">Die with 72 streaming multiprocessors, six HBM stacks, nickel frame, caps and pads. Tilt it with your pointer.</p>
+        </div>
+      </div>
+
+      <div class="mt-16 grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 xl:grid-cols-4">
+        {[
+          ["integratedbio.com", "Unicorn Studio scene (read from its JSON): a pre-rendered image on a plane that tilts 3% toward the pointer, under a two-pass 36-tap Gaussian progressive blur. Not live 3D.", "Kept: pointer tilt and the progressive blur edge above."],
+          ["koyeb.com", "The floating GPU chips are one flat WebP illustration (chips.illu.webp); the hero backdrop is a looping WebM. Depth comes from art, not geometry.", "Kept: chips as the subject, rendered live instead."],
+          ["speakeasy.com", "React Three Fiber scene piped through an ASCII post-process: a 16×16 glyph atlas on a 1024px canvas and a brightness ramp, plus a fluid sim for the pointer.", "Kept: atlas + shader glyph lookup, in plain WebGL2."],
+          ["jordangilroy.com", "Webflow + GSAP/Lenis, ASCII via a Unicorn Studio scene at 60 fps with 1.5 DPI and mouse interactivity.", "Kept: Lenis smooth scroll and the pointer ripple."],
+        ].map(([site, found, kept]) => (
+          <div class="bg-bg p-6">
+            <p class="label mb-3 text-accent">{site}</p>
+            <p class="text-[14.5px] leading-relaxed text-muted">{found}</p>
+            <p class="mt-4 text-[14px]">{kept}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .seg {
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.35rem 0.8rem;
+    font-size: 13px;
+    color: var(--muted);
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+  }
+  .seg:hover { color: var(--text); border-color: var(--muted); }
+  .seg[aria-checked="true"] { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  /* progressive blur: stacked backdrop blurs, each masked to a wider band */
+  .progressive-blur { position: absolute; inset: 0; pointer-events: none; }
+  .progressive-blur i { position: absolute; inset: 0; }
+  .progressive-blur i:nth-child(1) { backdrop-filter: blur(1px); mask: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 55%, #000 75%); }
+  .progressive-blur i:nth-child(2) { backdrop-filter: blur(3px); mask: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 65%, #000 85%); }
+  .progressive-blur i:nth-child(3) { backdrop-filter: blur(6px); mask: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 75%, #000 95%); }
+  .progressive-blur i:nth-child(4) { backdrop-filter: blur(12px); mask: radial-gradient(ellipse 70% 65% at 50% 50%, transparent 85%, #000 100%); }
+</style>
+
+<script>
+  import { mountAscii } from "../scripts/ascii-engine";
+  import { mountAsciiGlobe } from "../scripts/ascii-globe";
+  import { mountGpu3d } from "../scripts/gpu-3d";
+
+  const root = document.documentElement;
+  const hero = document.querySelector<HTMLElement>("[data-lab-hero]")!;
+  const globeCanvas = document.querySelector<HTMLCanvasElement>("[data-lab-globe]")!;
+  const asciiCanvas = document.querySelector<HTMLCanvasElement>("[data-lab-ascii]")!;
+  const blurb = document.querySelector<HTMLElement>("[data-scene-blurb]")!;
+
+  mountAsciiGlobe({ canvas: globeCanvas, reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)").matches });
+
+  let heroScene: ReturnType<typeof mountAscii> = null;
+  const panels = [...document.querySelectorAll<HTMLCanvasElement>("[data-panel]")].map((c) =>
+    mountAscii(c, c.dataset.panel!, { centered: true, cell: 9, pointerTarget: c.parentElement! }),
+  );
+  const gpu = mountGpu3d(document.querySelector<HTMLCanvasElement>("[data-gpu3d]")!);
+
+  const sceneBlurbs: Record<string, string> = {
+    globe: "The current hero: a ray-traced Earth with real coastlines, region nodes and packets on meridians.",
+  };
+  document.querySelectorAll<HTMLElement>("[data-panel]").forEach((c) => {
+    sceneBlurbs[c.dataset.panel!] = c.parentElement!.querySelector("figcaption p:last-child")!.textContent!;
+  });
+
+  const pick = (attr: string, value: string) =>
+    document.querySelectorAll<HTMLElement>(`[${attr}]`).forEach((b) => b.setAttribute("aria-checked", String(b.getAttribute(attr) === value)));
+
+  // scene
+  document.querySelectorAll<HTMLButtonElement>("[data-scene]").forEach((b) =>
+    b.addEventListener("click", () => {
+      const key = b.dataset.scene!;
+      pick("data-scene", key);
+      blurb.textContent = sceneBlurbs[key] ?? "";
+      if (key === "globe") {
+        globeCanvas.classList.remove("hidden");
+        asciiCanvas.classList.add("hidden");
+        return;
+      }
+      globeCanvas.classList.add("hidden");
+      asciiCanvas.classList.remove("hidden");
+      if (!heroScene) heroScene = mountAscii(asciiCanvas, key, { pointerTarget: hero });
+      else heroScene.setScene(key);
+    }),
+  );
+
+  const refreshAll = () => {
+    // wait a frame so new CSS variables and fonts are applied first
+    requestAnimationFrame(() => {
+      heroScene?.refreshColors();
+      panels.forEach((p) => p?.refreshColors());
+      gpu?.refresh();
+    });
+  };
+
+  // typeface
+  const fontNote = document.querySelector<HTMLElement>("[data-font-note]")!;
+  const setFont = (key: string) => {
+    if (key === "editorial") delete root.dataset.font;
+    else root.dataset.font = key;
+    try { localStorage.setItem("font", key); } catch { /* private mode */ }
+    pick("data-font-pick", key);
+    fontNote.textContent = document.querySelector<HTMLElement>(`[data-font-pick="${key}"]`)?.title ?? "";
+    document.fonts.ready.then(refreshAll);
+  };
+  document.querySelectorAll<HTMLButtonElement>("[data-font-pick]").forEach((b) => b.addEventListener("click", () => setFont(b.dataset.fontPick!)));
+
+  // palette
+  const setPalette = (key: string) => {
+    if (key === "mint") delete root.dataset.palette;
+    else root.dataset.palette = key;
+    try { localStorage.setItem("palette", key); } catch { /* private mode */ }
+    pick("data-palette-pick", key);
+    refreshAll();
+  };
+  document.querySelectorAll<HTMLButtonElement>("[data-palette-pick]").forEach((b) => b.addEventListener("click", () => setPalette(b.dataset.palettePick!)));
+
+  pick("data-font-pick", root.dataset.font ?? "editorial");
+  pick("data-palette-pick", root.dataset.palette ?? "mint");
+  fontNote.textContent = document.querySelector<HTMLElement>(`[data-font-pick="${root.dataset.font ?? "editorial"}"]`)?.title ?? "";
+</script>
