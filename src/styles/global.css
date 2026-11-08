@@ -201,7 +201,59 @@ body::after {
 canvas[data-ascii-globe] { opacity: 0; transition: opacity 1.4s ease 0.2s; }
 canvas[data-ascii-globe][data-ready] { opacity: 1; }
 
+/* ── multi-agent build intro ───────────────────────────────────────────── */
+html.building [data-build] { opacity: 0 !important; animation: none !important; }
+html.building .rise { animation: none !important; }
+html.building [data-build].is-built {
+  opacity: 1 !important;
+  animation: build-in 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) both !important;
+}
+html.building .hairline-grid { opacity: 0; transition: opacity 1.2s ease; }
+html.building.grid-on .hairline-grid { opacity: 0.6; }
+@keyframes build-in {
+  from { clip-path: inset(0 0 100% 0); filter: blur(6px); transform: translateY(6px); }
+  to { clip-path: inset(0 0 0 0); filter: none; transform: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   [data-reveal] { opacity: 1; transform: none; }
+}
+
+/* agent overlay pieces (created by src/scripts/agent-build.ts) */
+.agent-layer { position: fixed; inset: 0; z-index: 80; pointer-events: none; transition: opacity 0.6s; }
+.agent-layer.is-leaving { opacity: 0; }
+.agent-cursor { position: absolute; left: 0; top: 0; will-change: transform; filter: drop-shadow(0 4px 8px rgb(0 64 90 / 0.25)); }
+.agent-tag {
+  position: absolute; left: 16px; top: 18px; white-space: nowrap;
+  font: 600 11px/1 var(--font-sans); padding: 5px 8px; border-radius: 6px 6px 6px 2px;
+}
+.agent-ghost {
+  position: absolute; left: 0; top: 0; will-change: transform;
+  border: 1.5px dashed var(--c); border-radius: 14px;
+  background: color-mix(in oklab, var(--c) 7%, transparent);
+  box-shadow: 0 20px 40px -24px rgb(0 64 90 / 0.5);
+  backdrop-filter: blur(2px);
+  display: flex; flex-direction: column; justify-content: center; gap: 8px; padding: 0 14px;
+}
+.agent-ghost.is-round { border-radius: 999px; }
+.agent-ghost i { display: block; height: 6px; border-radius: 9px; background: color-mix(in oklab, var(--c) 22%, transparent); }
+.agent-ghost i:nth-child(2) { width: 82%; } .agent-ghost i:nth-child(3) { width: 64%; } .agent-ghost i:nth-child(4) { width: 46%; }
+.agent-ghost-label {
+  position: absolute; left: -1px; top: -22px; font: 600 10.5px/1 var(--font-mono);
+  padding: 5px 7px; border-radius: 6px 6px 6px 0;
+}
+.agent-status {
+  position: fixed; left: 50%; bottom: 22px; z-index: 81; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; white-space: nowrap;
+  background: #ffffff; color: #00405a; border: 1px solid var(--line); border-radius: 999px;
+  padding: 8px 8px 8px 14px; font: 500 13px/1 var(--font-sans);
+  box-shadow: 0 16px 36px -18px rgb(0 64 90 / 0.45); transition: opacity 0.6s, transform 0.6s;
+}
+.agent-status.is-leaving { opacity: 0; transform: translate(-50%, 12px); }
+.agent-status.is-done .agent-dot { background: #1c9b6f; animation: none; }
+.agent-dot { width: 8px; height: 8px; border-radius: 99px; background: #fc9412; animation: pulse-dot 1.4s ease-out infinite; }
+.agent-skip {
+  border-radius: 999px; background: #00405a; color: #fff; padding: 6px 12px;
+  font: 700 italic 12px/1 var(--font-sans); pointer-events: auto;
 }

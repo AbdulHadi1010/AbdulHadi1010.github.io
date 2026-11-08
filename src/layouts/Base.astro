@@ -56,6 +56,14 @@ const ld = {
         const d = document.documentElement;
         if (t === "light" || t === "dark") d.dataset.theme = t;
       } catch {}
+      // multi-agent build intro: once per visit, never with reduced motion
+      try {
+        const d = document.documentElement;
+        if (!sessionStorage.getItem("built") && !matchMedia("(prefers-reduced-motion: reduce)").matches && !location.hash) {
+          d.classList.add("building");
+          setTimeout(() => d.classList.remove("building"), 15000); // safety net if scripts fail
+        }
+      } catch {}
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />
   </head>

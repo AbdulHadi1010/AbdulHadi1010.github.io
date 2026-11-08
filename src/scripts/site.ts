@@ -1,5 +1,6 @@
 import Lenis from "lenis";
 import { initEmail } from "./email";
+import { runAgentBuild } from "./agent-build";
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const GLYPHS = "-=+*#%/\\<>_.:01";
@@ -124,6 +125,7 @@ async function initGlobe() {
   }
 }
 
+runAgentBuild();
 initScroll();
 initReveal();
 initHoverScramble();

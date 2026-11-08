@@ -88,7 +88,7 @@ const data = {
 
   const commands: Record<string, () => string> = {
     help: () =>
-      ["available commands:", "  whoami     who is this", "  projects   selected work", "  stack      tools I use", "  writing    recent posts", "  contact    how to reach me", "  clear      clear the screen"].join("\n"),
+      ["available commands:", "  whoami     who is this", "  projects   selected work", "  stack      tools I use", "  writing    recent posts", "  contact    how to reach me", "  rebuild    watch the agents build this page again", "  clear      clear the screen"].join("\n"),
     whoami: () =>
       "Abdul Hadi. Solutions Architect at SazebTech Consulting.\nKubernetes, AWS, Azure, private clouds, AI inference.\nCKA · AWS Solutions Architect · Azure Fundamentals.",
     projects: () => data.projects.map((p, i) => `${String(i + 1).padStart(2, "0")}  ${link(p.href, p.title)}\n    ${esc(p.outcome)}`).join("\n"),
@@ -109,6 +109,7 @@ const data = {
     history.push(cmd);
     hi = history.length;
     if (cmd === "clear") { out.innerHTML = ""; return; }
+    if (cmd === "rebuild") { try { sessionStorage.removeItem("built"); } catch {} window.scrollTo(0, 0); location.replace(location.pathname); return; }
     const fn = commands[cmd.toLowerCase()];
     print(fn ? fn() : `command not found: ${esc(cmd)}. try <span class="text-accent">help</span>`, "mb-3");
   };
