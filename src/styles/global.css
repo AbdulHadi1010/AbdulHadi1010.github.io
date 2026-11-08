@@ -262,3 +262,5 @@ html.touring [data-reveal][data-held] { opacity: 0 !important; transform: transl
 .agent-progress i { display: block; height: 100%; width: 0; background: #fc9412; border-radius: 9px; transition: width 0.6s ease; }
 .agent-status [data-msg] { min-width: 15ch; }
 @media (max-width: 480px) { .agent-progress { display: none; } .agent-status { font-size: 12px; } }
+/* during the agent tour, placed blocks appear quickly */
+html.touring [data-reveal] { transition-duration: 0.35s !important; transition-delay: 0s !important; }

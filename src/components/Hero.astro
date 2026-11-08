@@ -8,22 +8,22 @@ const [first] = profile.rotating;
   <canvas data-ascii-globe data-build="globe" data-build-name="globe.glsl" class="absolute inset-0 -z-10 h-full w-full" aria-hidden="true"></canvas>
   <div class="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_82%,transparent)_34%,transparent_62%)] max-md:bg-[linear-gradient(180deg,var(--bg)_0%,color-mix(in_oklab,var(--bg)_75%,transparent)_45%,transparent_70%)]"></div>
 
-  <div class="mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-4 py-16 sm:px-8">
-    <p class="rise label mb-8 flex items-center gap-2.5" style="--d:100ms" data-build="status" data-build-name="<StatusBadge />">
+  <div data-build="copy" data-build-name="<HeroCopy />" class="mx-auto flex w-full max-w-[1320px] flex-1 flex-col justify-center px-4 py-16 sm:px-8">
+    <p class="rise label mb-8 flex items-center gap-2.5" style="--d:100ms">
       <span class="live-dot"></span>
       Open to infra roles and contracts
     </p>
 
-    <h1 id="hero-title" data-build="headline" data-build-name="<Headline />" class="rise max-w-[14ch] font-serif text-[clamp(2.6rem,7vw,6.2rem)] leading-[1.02]" style="--d:200ms">
+    <h1 id="hero-title" class="rise max-w-[14ch] font-serif text-[clamp(2.6rem,7vw,6.2rem)] leading-[1.02]" style="--d:200ms">
       Engineering infrastructure for
       <span class="block text-accent"><span data-rotate={JSON.stringify(profile.rotating)}>{first}</span><span class="caret font-light">|</span></span>
     </h1>
 
-    <p data-build="tagline" data-build-name="<Tagline />" class="rise tagline mt-7 max-w-[44ch] text-[1.1rem] sm:text-[1.3rem]" style="--d:350ms">
+    <p class="rise tagline mt-7 max-w-[44ch] text-[1.1rem] sm:text-[1.3rem]" style="--d:350ms">
       I build <b>cloud platforms</b> that don't just run, they <b>perform</b>. Kubernetes, AWS, Azure, private clouds and the pipelines that ship to them.
     </p>
 
-    <div class="rise mt-10 flex flex-wrap items-center gap-3" style="--d:480ms" data-build="cta" data-build-name="<CallToAction />">
+    <div class="rise mt-10 flex flex-wrap items-center gap-3" style="--d:480ms">
       <a href="#work" class="btn-brand text-[1.05rem]">
         Explore my work <span aria-hidden="true">→</span>
       </a>
