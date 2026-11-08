@@ -17,9 +17,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: npm
@@ -34,8 +34,9 @@ jobs:
       - name: Type-check and build
         run: npm run build
         env:
-          SITE: ${{ steps.pages.outputs.origin }}
-          BASE: ${{ steps.pages.outputs.base_path }}/
+          # pinned: Pages reports http:// until "Enforce HTTPS" is on, and canonical URLs must be https
+          SITE: https://abdul-hadi.me
+          BASE: /
           PUBLIC_COMMIT_SHA: ${{ github.sha }}
 
       - name: Budget check (build output; browsers only fetch the fonts in use)
