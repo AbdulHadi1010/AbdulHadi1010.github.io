@@ -20,7 +20,7 @@ const nav = [
   <div class="notch pointer-events-auto relative" data-notch-body>
     <div class="flex h-[52px] items-center gap-2 pl-3 pr-2 sm:gap-6 sm:pl-4">
       <a href={base} class="group flex items-center gap-2.5 pr-1" aria-label={`${profile.name}, home`}>
-        <span class="grid h-7 w-7 place-items-center rounded-[7px] bg-accent font-mono text-[11px] font-bold leading-none text-accent-ink">AH</span>
+        <span class="grid h-7 w-7 place-items-center rounded-[7px] bg-accent text-[11px] font-bold leading-none text-[#00405a]">AH</span>
         <span class="hidden text-[15px] font-semibold tracking-[-0.01em] sm:inline">Abdul Hadi</span>
       </a>
 
@@ -28,7 +28,6 @@ const nav = [
         {nav.map((n) => (
           <a href={href(n.href)} class="rounded-full px-3 py-1.5 text-[14px] opacity-75 transition-[opacity,background] hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100">{n.label}</a>
         ))}
-        <a href={`${base}lab/`} class="rounded-full px-3 py-1.5 text-[14px] opacity-75 transition-[opacity,background] hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100">Lab</a>
       </nav>
 
       <div class="ml-auto flex items-center gap-1.5 sm:ml-0">
@@ -36,7 +35,7 @@ const nav = [
         <button type="button" data-theme-toggle class="grid h-8 w-8 place-items-center rounded-full opacity-75 transition hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100" aria-label="Toggle colour theme">
           <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" /><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" /></svg>
         </button>
-        <a href={href("#contact")} class="hidden items-center gap-2 rounded-full bg-[var(--notch-ink)] px-4 py-2 text-[14px] font-medium text-[var(--notch)] transition-transform hover:scale-[1.03] sm:inline-flex">
+        <a href={href("#contact")} class="hidden items-center gap-2 rounded-full bg-accent px-4 py-2 text-[14px] font-bold italic text-[#00405a] transition-transform hover:scale-[1.03] sm:inline-flex">
           Hire me <span aria-hidden="true">→</span>
         </a>
         <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" class="grid h-8 w-8 place-items-center rounded-full md:hidden" aria-label="Open menu">
@@ -51,7 +50,6 @@ const nav = [
           {[...nav, { href: "#contact", label: "Contact" }].map((n) => (
             <li><a href={href(n.href)} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em]" data-menu-link>{n.label}</a></li>
           ))}
-          <li><a href={`${base}lab/`} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em]" data-menu-link>Lab</a></li>
         </ul>
       </nav>
     </div>
@@ -60,8 +58,8 @@ const nav = [
 
 <style>
   .notch {
-    --notch: var(--text);
-    --notch-ink: var(--bg);
+    --notch: var(--navy);
+    --notch-ink: #e2f3f0;
     --r: 18px;
     background: var(--notch);
     color: var(--notch-ink);

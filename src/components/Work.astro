@@ -2,6 +2,7 @@
 import { projects, stats, moreProjects } from "../data/profile";
 import { logoSvg } from "../data/logos";
 import SectionHead from "./SectionHead.astro";
+import ProjectVisual from "./ProjectVisual.astro";
 ---
 
 <section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 md:py-32" aria-labelledby="stats-title">
@@ -19,33 +20,30 @@ import SectionHead from "./SectionHead.astro";
 <section id="work" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 pb-24 sm:px-8 md:pb-32" aria-labelledby="work-title">
   <SectionHead id="work-title" index="01" label="Selected work" title="Things I built, measured, <em>and wrote down.</em>" />
 
-  <ol class="border-t border-line">
+  <ol class="space-y-6 md:space-y-8">
     {projects.map((p, i) => (
-      <li data-reveal class="group grid grid-cols-1 gap-8 border-b border-line py-10 md:grid-cols-12 md:py-14">
-        <div class="flex gap-6 md:col-span-3 md:flex-col md:gap-2">
-          <span class="label text-accent">{String(i + 1).padStart(2, "0")}</span>
-          <span class="label">{p.kind} · {p.year}</span>
-        </div>
-
-        <div class="md:col-span-5">
-          <h3 class="font-serif text-[clamp(1.8rem,3.2vw,2.7rem)] leading-[1.05]">
+      <li data-reveal class="group grid grid-cols-1 items-center gap-8 rounded-[28px] border border-line bg-surface/50 p-5 sm:p-8 md:grid-cols-12 md:gap-12 md:p-10">
+        <div class={`md:col-span-6 ${i % 2 ? "md:order-2" : ""}`}>
+          <div class="mb-6 flex items-center gap-3">
+            <span class="grid h-9 w-9 place-items-center rounded-full bg-navy text-[13px] font-semibold text-white">{String(i + 1).padStart(2, "0")}</span>
+            <span class="label">{p.kind} · {p.year}</span>
+          </div>
+          <h3 class="font-serif text-[clamp(1.8rem,3.2vw,2.6rem)] leading-[1.08]">
             <a href={p.href} target="_blank" rel="noopener" class="link-u">{p.title}</a>
           </h3>
-          <p class="mt-5 max-w-[56ch] text-muted">{p.summary}</p>
-          <p class="mt-5 inline-flex items-center gap-2 font-mono text-[13px]">
-            <span class="text-accent" aria-hidden="true">→</span>{p.outcome}
+          <p class="mt-4 max-w-[56ch] text-[15.5px] leading-relaxed text-muted">{p.summary}</p>
+          <p class="mt-6 inline-flex items-center gap-2 rounded-full bg-accent/15 px-4 py-1.5 text-[14px] font-semibold text-text">
+            <span class="text-accent" aria-hidden="true">●</span>{p.outcome}
           </p>
-          <ul class="mt-6 flex flex-wrap gap-1.5" aria-label="Tools">
-            {p.stack.map((t) => <li class="border border-line px-2 py-0.5 font-mono text-[11px] text-muted">{t}</li>)}
+          <ul class="mt-5 flex flex-wrap gap-1.5" aria-label="Tools">
+            {p.stack.map((t) => <li class="rounded-full border border-line bg-bg px-3 py-1 text-[12px] font-medium text-muted">{t}</li>)}
           </ul>
+          <a href={p.href} target="_blank" rel="noopener" class="mt-7 inline-flex items-center gap-2 text-[14px] font-bold italic text-text transition-[gap] hover:gap-3">
+            {p.href.includes("github.com") ? "View the source" : "Read the write-up"} <span class="text-accent" aria-hidden="true">→</span>
+          </a>
         </div>
-
-        <figure class="md:col-span-4">
-          <pre class="overflow-x-auto border border-line bg-surface/70 p-4 font-mono text-[11.5px] leading-[1.7] text-muted transition-colors group-hover:border-accent/50 group-hover:text-text" aria-label={`Diagram: ${p.title}`}>{p.diagram.join("\n")}</pre>
-          <figcaption class="label mt-2 flex justify-between">
-            <span>fig. {String(i + 1).padStart(2, "0")}</span>
-            <a href={p.href} target="_blank" rel="noopener" class="hover:text-text" data-scramble>{p.href.includes("github.com") ? "Source" : "Read"} ↗</a>
-          </figcaption>
+        <figure class={`md:col-span-6 ${i % 2 ? "md:order-1" : ""}`} aria-label={`Live diagram: ${p.title}`}>
+          <ProjectVisual slug={p.slug} />
         </figure>
       </li>
     ))}
@@ -77,3 +75,7 @@ import SectionHead from "./SectionHead.astro";
     ))}
   </div>
 </section>
+
+<script>
+  import "../scripts/work-visuals.ts";
+</script>

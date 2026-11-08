@@ -16,7 +16,7 @@ const land = (lon, lat) => {
 };
 
 const CHARS = " .·:-=+*≡#%@";
-const BG = "#0b0b0a", INK = "#46453f", MID = "#8d897f", TEXT = "#ece9e2", ACC = "#3ef0a8";
+const BG = "#e2f3f0", INK = "#b2d4ce", MID = "#4b7282", TEXT = "#00405a", ACC = "#f7931e";
 const cell = 13, cols = Math.ceil(1200 / (cell * 0.62)), rows = Math.ceil(630 / cell);
 const cw = 1200 / cols;
 const cx = 880, cy = 330, R = 300;
@@ -60,11 +60,11 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630">
 <defs><linearGradient id="fade" x1="0" x2="1"><stop offset="0.55" stop-color="${BG}"/><stop offset="1" stop-color="${BG}" stop-opacity="0"/></linearGradient></defs>
 <circle cx="72" cy="114" r="4" fill="${ACC}"/>
 <text x="88" y="119" font-family="Consolas, monospace" font-size="15" letter-spacing="1.5" fill="${MID}">OPEN TO INFRA ROLES AND CONTRACTS</text>
-<text x="66" y="250" font-family="Georgia, 'Times New Roman', serif" font-size="92" fill="${TEXT}">Abdul Hadi</text>
-<text x="70" y="318" font-family="Consolas, monospace" font-size="30" fill="${ACC}">cloud · devops · ai infra_</text>
-<text x="70" y="400" font-family="Georgia, serif" font-size="26" fill="${MID}">Kubernetes, AWS, Azure, private clouds</text>
-<text x="70" y="436" font-family="Georgia, serif" font-size="26" fill="${MID}">and the pipelines that ship to them.</text>
-<line x1="70" y1="540" x2="1130" y2="540" stroke="#262522"/>
+<text x="66" y="250" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700" font-size="88" fill="${TEXT}">Abdul Hadi</text>
+<text x="70" y="318" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="700" font-size="34" fill="${ACC}">Cloud · DevOps · AI infrastructure</text>
+<text x="70" y="400" font-family="'Segoe UI', Arial, sans-serif" font-style="italic" font-size="26" fill="${TEXT}">Kubernetes, AWS, Azure, private clouds</text>
+<text x="70" y="436" font-family="'Segoe UI', Arial, sans-serif" font-style="italic" font-size="26" fill="${TEXT}">and the pipelines that ship to them.</text>
+<line x1="70" y1="540" x2="1130" y2="540" stroke="#c2ddd8"/>
 <text x="70" y="580" font-family="Consolas, monospace" font-size="16" letter-spacing="1.2" fill="${MID}">CKA · AWS SOLUTIONS ARCHITECT · AZURE</text>
 <text x="1130" y="580" text-anchor="end" font-family="Consolas, monospace" font-size="16" letter-spacing="1.2" fill="${MID}">ABDULHADI1010.GITHUB.IO</text>
 </svg>`;

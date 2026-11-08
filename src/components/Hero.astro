@@ -14,22 +14,20 @@ const [first] = profile.rotating;
       Open to infra roles and contracts
     </p>
 
-    <h1 id="hero-title" class="rise max-w-[15ch] font-serif text-[clamp(2.9rem,8.2vw,7.4rem)] leading-[0.95] tracking-[-0.02em]" style="--d:200ms">
-      I build infrastructure for
-      <span class="block font-mono text-[0.62em] leading-[1.25] tracking-[-0.04em] text-accent">
-        <span data-rotate={JSON.stringify(profile.rotating)}>{first}</span><span class="caret">_</span>
-      </span>
+    <h1 id="hero-title" class="rise max-w-[14ch] font-serif text-[clamp(2.6rem,7vw,6.2rem)] leading-[1.02]" style="--d:200ms">
+      Engineering infrastructure for
+      <span class="block text-accent"><span data-rotate={JSON.stringify(profile.rotating)}>{first}</span><span class="caret font-light">|</span></span>
     </h1>
 
-    <p class="rise mt-8 max-w-[46ch] text-[1.05rem] text-muted sm:text-lg" style="--d:350ms">
-      {profile.intro}
+    <p class="rise tagline mt-7 max-w-[44ch] text-[1.1rem] sm:text-[1.3rem]" style="--d:350ms">
+      I build <b>cloud platforms</b> that don't just run, they <b>perform</b>. Kubernetes, AWS, Azure, private clouds and the pipelines that ship to them.
     </p>
 
     <div class="rise mt-10 flex flex-wrap items-center gap-3" style="--d:480ms">
-      <a href="#work" class="group inline-flex items-center gap-3 bg-text px-5 py-3 font-mono text-[13px] text-bg transition-[gap] hover:gap-5">
-        <span data-scramble>See the work</span><span aria-hidden="true">↓</span>
+      <a href="#work" class="btn-brand text-[1.05rem]">
+        Explore my work <span aria-hidden="true">→</span>
       </a>
-      <button type="button" data-copy={profile.email} class="inline-flex items-center gap-3 border border-line bg-bg/60 px-5 py-3 font-mono text-[13px] backdrop-blur transition-colors hover:border-text">
+      <button type="button" data-copy={profile.email} class="btn-ghost text-[14px] font-medium">
         <span data-copy-label>{profile.email}</span>
         <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" class="text-muted"><rect x="4.5" y="4.5" width="9" height="9" fill="none" stroke="currentColor" /><path d="M2.5 11V2.5H11" fill="none" stroke="currentColor" /></svg>
       </button>

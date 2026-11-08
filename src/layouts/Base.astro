@@ -1,18 +1,12 @@
 ---
-import "@fontsource/instrument-serif/400.css";
-import "@fontsource/instrument-serif/400-italic.css";
-import "@fontsource-variable/instrument-sans";
+import "@fontsource/poppins/300.css";
+import "@fontsource/poppins/300-italic.css";
+import "@fontsource/poppins/400.css";
+import "@fontsource/poppins/500.css";
+import "@fontsource/poppins/600.css";
+import "@fontsource/poppins/700.css";
+import "@fontsource/poppins/700-italic.css";
 import "@fontsource-variable/jetbrains-mono";
-import "@fontsource-variable/geist";
-import "@fontsource-variable/geist-mono";
-import "@fontsource-variable/space-grotesk";
-import "@fontsource/space-mono/400.css";
-import "@fontsource/ibm-plex-sans/400.css";
-import "@fontsource/ibm-plex-sans/500.css";
-import "@fontsource/ibm-plex-sans/400-italic.css";
-import "@fontsource/ibm-plex-mono/400.css";
-import "@fontsource-variable/bricolage-grotesque";
-import "@fontsource-variable/martian-mono";
 import "../styles/global.css";
 import { profile } from "../data/profile";
 
@@ -48,8 +42,8 @@ const ld = {
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
-    <meta name="theme-color" content="#0b0b0a" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f1eee7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#021f2c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#e2f3f0" media="(prefers-color-scheme: light)" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -62,10 +56,6 @@ const ld = {
         const t = localStorage.getItem("theme");
         const d = document.documentElement;
         if (t === "light" || t === "dark") d.dataset.theme = t;
-        const f = localStorage.getItem("font");
-        if (f && /^[a-z]+$/.test(f)) d.dataset.font = f;
-        const p = localStorage.getItem("palette");
-        if (p && /^[a-z]+$/.test(p)) d.dataset.palette = p;
       } catch {}
     </script>
     <script type="application/ld+json" set:html={JSON.stringify(ld)} />

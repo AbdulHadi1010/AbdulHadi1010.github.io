@@ -12,7 +12,7 @@ Personal site of Abdul Hadi: cloud, DevOps and AI infrastructure engineer.
 | Styling | Tailwind CSS v4 | Colour tokens live in `src/styles/global.css` as CSS variables, light and dark. |
 | Hero | Hand-written WebGL2 shader, no three.js | ASCII globe with real coastlines, about 6 KB of code. |
 | Motion | Lenis, IntersectionObserver, CSS | Smooth scroll, reveal on scroll, text scramble. All off with `prefers-reduced-motion`. |
-| Fonts | Instrument Serif, Instrument Sans, JetBrains Mono | Self-hosted through Fontsource. No Google Fonts request. |
+| Brand | Sazeb Tech palette (mint #E2F3F0, navy #00405A, orange #FC9412) and Poppins | Matches the company banners. Self-hosted through Fontsource; JetBrains Mono only for terminal and diagrams. |
 | Hosting | GitHub Pages via GitHub Actions | Free. Every push to `main` type-checks, builds, checks page weight and deploys. |
 
 ## How the ASCII globe works

@@ -1,0 +1,186 @@
+---
+// One live diagram per featured project. Driven by src/scripts/work-visuals.ts,
+// which only animates while the card is on screen and shows the final state
+// when the visitor prefers reduced motion.
+interface Props { slug: string }
+const { slug } = Astro.props;
+
+const gates = ["Scanner rules", "No new findings", "Server dry-run", "Readiness", "User journeys", "Load vs baseline", "Security intent"];
+const roles = ["common", "master", "worker"];
+const envs = ["docker", "vagrant", "ec2"];
+const reply =
+  "Restore from the last snapshot first: restic restore latest --target /var/www/html. Diff it on staging, then promote. After that we talk about why prod had rm -rf on a shell without a confirm.";
+---
+
+<div class="viz" data-viz={slug}>
+  {slug === "secure-but-broken" && (
+    <>
+      <div class="viz-head"><span>repair <b data-run>#01</b> · fresh cluster</span><span data-verdict class="verdict">running</span></div>
+      <ol class="gates">
+        {gates.map((g, i) => (
+          <li data-gate data-state="idle">
+            <span class="gi">{String(i + 1).padStart(2, "0")}</span>
+            <span class="gn">{g}</span>
+            <span class="gs" aria-hidden="true"><i class="s-idle">·</i><i class="s-run"></i><i class="s-pass">✓</i><i class="s-fail">✗</i></span>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+
+  {slug === "eks-storage" && (
+    <>
+      <div class="viz-head"><span>benchmark pod · same EKS cluster</span><span>tainted node group</span></div>
+      <div class="bars">
+        <p class="bar-label">IOPS</p>
+        <div class="bar-row"><span class="bn">gp3 EBS<small>m5.large</small></span><div class="track"><div class="fill fill-dim" data-bar="1.2"></div></div><b data-count="1500">0</b></div>
+        <div class="bar-row"><span class="bn">local NVMe<small>i4i.xlarge</small></span><div class="track"><div class="fill fill-hot" data-bar="100"></div></div><b data-count="127000">0</b></div>
+        <p class="bar-label mt">Latency</p>
+        <div class="bar-row"><span class="bn">gp3 EBS</span><div class="track"><div class="fill fill-dim" data-bar="100"></div></div><b>1×</b></div>
+        <div class="bar-row"><span class="bn">local NVMe</span><div class="track"><div class="fill fill-hot" data-bar="1.05"></div></div><b>95× less</b></div>
+      </div>
+    </>
+  )}
+
+  {slug === "llm-on-cpu" && (
+    <>
+      <div class="viz-head"><span>m5.xlarge · 4 vCPU · no GPU</span><span>same prompt</span></div>
+      <div class="panes" data-reply={reply}>
+        <div class="pane">
+          <p class="pane-h"><span>stock Ollama</span><b data-tps="2.5">2.5 t/s</b></p>
+          <p class="pane-b"><span data-type="2.5"></span><i class="cur"></i></p>
+        </div>
+        <div class="pane pane-hot">
+          <p class="pane-h"><span>built for this CPU</span><b data-tps="27">27 t/s</b></p>
+          <p class="pane-b"><span data-type="27"></span><i class="cur"></i></p>
+        </div>
+      </div>
+      <p class="viz-foot">prompt: “You are a Senior SysAdmin. A junior dev deleted /var/www/html.” · reply text illustrative, speeds measured</p>
+    </>
+  )}
+
+  {slug === "study-assistant" && (
+    <>
+      <div class="viz-head"><span>request path</span><span>Converse API tool loop</span></div>
+      <svg class="flow" viewBox="0 0 400 230" role="img" aria-label="Streamlit calls Lambda, Lambda calls Bedrock Nova Pro, which uses DynamoDB and Todoist as tools">
+        <defs>
+          <path id="p-ui-l" d="M88 115 H150" />
+          <path id="p-l-b" d="M230 100 C 260 100, 262 58, 290 58" />
+          <path id="p-l-d" d="M190 140 V 182" />
+          <path id="p-b-t" d="M330 80 V 168" />
+        </defs>
+        <g class="edges">
+          <use href="#p-ui-l" /><use href="#p-l-b" /><use href="#p-l-d" /><use href="#p-b-t" />
+        </g>
+        <g class="node"><rect x="12" y="92" width="76" height="46" rx="10" /><text x="50" y="112">Streamlit</text><text x="50" y="127" class="sub">chat UI</text></g>
+        <g class="node node-core"><rect x="150" y="90" width="80" height="50" rx="10" /><text x="190" y="111">Lambda</text><text x="190" y="127" class="sub">agent loop</text></g>
+        <g class="node node-hot"><rect x="290" y="36" width="96" height="46" rx="10" /><text x="338" y="56">Bedrock</text><text x="338" y="71" class="sub">Nova Pro</text></g>
+        <g class="node"><rect x="146" y="182" width="88" height="40" rx="10" /><text x="190" y="200">DynamoDB</text><text x="190" y="213" class="sub">courses</text></g>
+        <g class="node"><rect x="290" y="168" width="96" height="40" rx="10" /><text x="338" y="186">Todoist</text><text x="338" y="199" class="sub">tool call</text></g>
+        <circle r="4" class="pkt"><animateMotion dur="2.4s" repeatCount="indefinite"><mpath href="#p-ui-l" /></animateMotion></circle>
+        <circle r="4" class="pkt pkt-hot"><animateMotion dur="2.4s" begin="0.8s" repeatCount="indefinite"><mpath href="#p-l-b" /></animateMotion></circle>
+        <circle r="4" class="pkt"><animateMotion dur="2.4s" begin="1.4s" repeatCount="indefinite"><mpath href="#p-l-d" /></animateMotion></circle>
+        <circle r="4" class="pkt pkt-hot"><animateMotion dur="2.4s" begin="1.8s" repeatCount="indefinite"><mpath href="#p-b-t" /></animateMotion></circle>
+      </svg>
+      <p class="viz-foot">least-privilege IAM · one stack · pytest for every workshop blank</p>
+    </>
+  )}
+
+  {slug === "k8s-ansible" && (
+    <>
+      <div class="viz-head"><span>ansible-playbook site.yml</span><span data-molecule>molecule test</span></div>
+      <div class="envs">
+        <span></span>
+        {envs.map((e) => <span class="eh">{e}</span>)}
+        {roles.map((r) => (
+          <>
+            <span class="er">{r}</span>
+            {envs.map(() => <span class="ec" data-cell data-state="idle"><i class="s-idle">·</i><i class="s-run"></i><i class="s-pass">ok</i></span>)}
+          </>
+        ))}
+      </div>
+      <p class="viz-foot" data-recap>PLAY RECAP · waiting</p>
+    </>
+  )}
+</div>
+
+<style is:global>
+  .viz {
+    position: relative; overflow: hidden;
+    border: 1px solid var(--line); border-radius: 22px;
+    background:
+      radial-gradient(120% 80% at 100% 0%, color-mix(in oklab, var(--cyan) 14%, transparent), transparent 60%),
+      radial-gradient(90% 70% at 0% 100%, color-mix(in oklab, var(--accent) 12%, transparent), transparent 60%),
+      var(--surface);
+    padding: 18px 18px 16px; font-family: var(--font-mono); font-size: 12px; color: var(--text);
+    box-shadow: 0 30px 60px -40px color-mix(in oklab, var(--navy) 70%, transparent);
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .group:hover .viz { transform: translateY(-4px) rotate(-0.4deg); }
+  .viz-head { display: flex; justify-content: space-between; gap: 8px; color: var(--muted); font-size: 11px; margin-bottom: 14px; }
+  .viz-head b { color: var(--text); font-weight: 600; }
+  .viz-foot { margin-top: 12px; color: var(--muted); font-size: 10.5px; }
+
+  /* states shared by gates and env cells */
+  [data-state] i { display: none; font-style: normal; }
+  [data-state="idle"] .s-idle, [data-state="run"] .s-run, [data-state="pass"] .s-pass, [data-state="fail"] .s-fail { display: inline-block; }
+  .s-run { width: 10px; height: 10px; border-radius: 99px; border: 2px solid var(--line); border-top-color: var(--accent); animation: spin 0.7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* gates */
+  .gates { display: grid; gap: 5px; }
+  .gates li { display: grid; grid-template-columns: 24px 1fr 22px; align-items: center; padding: 6px 10px; border-radius: 9px; background: color-mix(in oklab, var(--bg) 70%, transparent); transition: background 0.3s, color 0.3s; }
+  .gi { color: var(--muted); }
+  .gs { text-align: right; font-weight: 700; }
+  .gates li[data-state="run"] { background: color-mix(in oklab, var(--accent) 16%, var(--bg)); }
+  .gates li[data-state="pass"] .gs { color: #1c9b6f; }
+  .gates li[data-state="fail"] { background: color-mix(in oklab, var(--accent) 28%, var(--bg)); }
+  .gates li[data-state="fail"] .gs { color: var(--accent-strong); }
+  .verdict { padding: 1px 8px; border-radius: 99px; background: var(--bg); }
+  .verdict[data-kind="ok"] { background: #1c9b6f; color: #fff; }
+  .verdict[data-kind="bad"] { background: var(--accent); color: #00405a; }
+
+  /* bars */
+  .bars { display: grid; gap: 9px; }
+  .bar-label { color: var(--muted); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .bar-label.mt { margin-top: 8px; }
+  .bar-row { display: grid; grid-template-columns: 92px 1fr 78px; align-items: center; gap: 10px; }
+  .bn { display: flex; flex-direction: column; line-height: 1.2; }
+  .bn small { color: var(--muted); font-size: 10px; }
+  .bar-row b { text-align: right; font-weight: 600; }
+  .track { height: 14px; border-radius: 99px; background: color-mix(in oklab, var(--line) 60%, transparent); overflow: hidden; }
+  .fill { height: 100%; width: 0; min-width: 4px; border-radius: 99px; transition: width 1.6s cubic-bezier(0.2, 0.7, 0.2, 1); }
+  .fill-dim { background: var(--muted); }
+  .fill-hot { background: linear-gradient(90deg, var(--accent), #ffc067); }
+
+  /* typing panes */
+  .panes { display: grid; gap: 10px; }
+  .pane { border-radius: 12px; background: color-mix(in oklab, var(--bg) 75%, transparent); padding: 10px 12px; }
+  .pane-hot { background: var(--navy); color: #e2f3f0; }
+  .pane-h { display: flex; justify-content: space-between; font-size: 10.5px; opacity: 0.8; margin-bottom: 6px; }
+  .pane-hot .pane-h b { color: var(--accent); opacity: 1; }
+  .pane-b { min-height: 4.6em; line-height: 1.55; font-size: 11.5px; }
+  .cur { display: inline-block; width: 6px; height: 12px; background: currentColor; vertical-align: -2px; margin-left: 1px; animation: blink 1s steps(1) infinite; font-style: normal; }
+
+  /* flow */
+  .flow { width: 100%; height: auto; display: block; }
+  .flow .edges use { fill: none; stroke: var(--line); stroke-width: 2; stroke-dasharray: 4 5; animation: dash 1.2s linear infinite; }
+  @keyframes dash { to { stroke-dashoffset: -18; } }
+  .flow .node rect { fill: var(--bg); stroke: var(--line); }
+  .flow .node-core rect { fill: var(--navy); stroke: var(--navy); }
+  .flow .node-core text { fill: #e2f3f0; }
+  .flow .node-hot rect { fill: color-mix(in oklab, var(--accent) 22%, var(--bg)); stroke: var(--accent); }
+  .flow text { font-family: var(--font-sans); font-size: 11.5px; font-weight: 600; text-anchor: middle; fill: var(--text); }
+  .flow text.sub { font-family: var(--font-mono); font-size: 9px; font-weight: 400; fill: var(--muted); }
+  .flow .node-core text.sub { fill: #9cc3cf; }
+  .flow .pkt { fill: var(--cyan); }
+  .flow .pkt-hot { fill: var(--accent); }
+
+  /* env matrix */
+  .envs { display: grid; grid-template-columns: 1.3fr repeat(3, 1fr); gap: 5px; align-items: center; }
+  .eh { text-align: center; color: var(--muted); font-size: 10.5px; }
+  .er { color: var(--muted); }
+  .ec { display: grid; place-items: center; height: 30px; border-radius: 8px; background: color-mix(in oklab, var(--bg) 70%, transparent); font-weight: 700; transition: background 0.3s; }
+  .ec[data-state="pass"] { background: color-mix(in oklab, #1c9b6f 18%, var(--bg)); color: #1c9b6f; }
+  [data-recap].done { color: #1c9b6f; }
+</style>
