@@ -28,8 +28,8 @@ export function scramble(el: HTMLElement, to = el.dataset.text ?? el.textContent
 }
 
 // ── smooth scroll ────────────────────────────────────────────────────────────
-function initScroll() {
-  if (reduced) return;
+function initScroll(): Lenis | null {
+  if (reduced) return null;
   const lenis = new Lenis({ lerp: 0.11, wheelMultiplier: 0.9 });
   const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
@@ -43,6 +43,7 @@ function initScroll() {
       history.replaceState(null, "", id);
     });
   });
+  return lenis;
 }
 
 // ── reveal on scroll ─────────────────────────────────────────────────────────
@@ -54,6 +55,7 @@ function initReveal() {
       for (const e of entries) {
         if (!e.isIntersecting) continue;
         const el = e.target as HTMLElement;
+        if (el.hasAttribute("data-held")) continue; // an agent will drop this one in
         el.classList.add("is-in");
         el.querySelectorAll<HTMLElement>("[data-scramble-in]").forEach((s) => scramble(s));
         io.unobserve(el);
@@ -125,8 +127,8 @@ async function initGlobe() {
   }
 }
 
-runAgentBuild();
-initScroll();
+const lenis = initScroll();
+runAgentBuild(lenis);
 initReveal();
 initHoverScramble();
 initRotator();

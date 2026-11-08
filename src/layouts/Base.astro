@@ -61,7 +61,8 @@ const ld = {
         const d = document.documentElement;
         if (!sessionStorage.getItem("built") && !matchMedia("(prefers-reduced-motion: reduce)").matches && !location.hash) {
           d.classList.add("building");
-          setTimeout(() => d.classList.remove("building"), 15000); // safety net if scripts fail
+          // safety net: if the intro script never starts, show the page anyway
+          setTimeout(() => { if (!d.dataset.agents) d.classList.remove("building"); }, 5000);
         }
       } catch {}
     </script>
