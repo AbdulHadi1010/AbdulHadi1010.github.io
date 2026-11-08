@@ -16,7 +16,7 @@ const land = (lon, lat) => {
 };
 
 const CHARS = " .·:-=+*≡#%@";
-const BG = "#e2f3f0", INK = "#b2d4ce", MID = "#4b7282", TEXT = "#00405a", ACC = "#f7931e";
+const BG = "#ffffff", INK = "#b2d4ce", MID = "#4b7282", TEXT = "#00405a", ACC = "#f7931e";
 const cell = 13, cols = Math.ceil(1200 / (cell * 0.62)), rows = Math.ceil(630 / cell);
 const cw = 1200 / cols;
 const cx = 880, cy = 330, R = 300;

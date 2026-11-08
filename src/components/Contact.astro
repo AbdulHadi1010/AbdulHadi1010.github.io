@@ -12,6 +12,7 @@ const data = {
 };
 ---
 
+<div class="band-navy">
 <section id="contact" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="contact-title">
   <SectionHead id="contact-title" index="05" label="Contact" title="Have a cluster that <em>needs work?</em>" />
 
@@ -20,7 +21,7 @@ const data = {
       <p class="max-w-[40ch] text-lg text-muted">
         Platform builds, cloud migrations, Kubernetes hardening, or getting a model to serve fast on hardware you already pay for. Email is quickest.
       </p>
-      <a href={`mailto:${profile.email}`} class="link-u mt-8 inline-block font-serif text-[clamp(1.5rem,3vw,2.3rem)] leading-tight break-all">{profile.email}</a>
+      <a href={`mailto:${profile.email}`} class="link-u mt-8 inline-block font-serif text-[clamp(1.35rem,2.4vw,2.1rem)] leading-tight">{profile.email.split("@")[0]}<wbr />@{profile.email.split("@")[1]}</a>
       <ul class="mt-10 grid grid-cols-2 gap-px border border-line bg-line">
         {Object.entries(profile.links).map(([k, v]) => (
           <li class="bg-bg">
@@ -54,6 +55,7 @@ const data = {
     </div>
   </div>
 </section>
+</div>
 
 <script type="application/json" id="term-data" set:html={JSON.stringify(data)} />
 

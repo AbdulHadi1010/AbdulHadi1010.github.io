@@ -3,9 +3,10 @@
 /* ── tokens: Sazeb Tech brand (sampled from the brand banners) ──────────────
    mint #E2F3F0 · petrol navy #00405A · orange #FC9412 · indigo #2C3080 · cyan #45BFDC */
 :root {
-  --bg: #e2f3f0;
-  --surface: #f2faf8;
-  --line: #c2ddd8;
+  --bg: #ffffff;              /* white is the primary surface */
+  --surface: #f1f8f6;         /* brand mint, lifted, for cards and panels */
+  --tint: #e2f3f0;            /* full brand mint for highlights */
+  --line: #d6e9e5;
   --text: #00405a;
   --muted: #4b7282;
   --accent: #f7931e;          /* highlight words, nodes, live states */
@@ -14,8 +15,8 @@
   --navy: #00405a;
   --indigo: #2c3080;
   --cyan: #45bfdc;
-  --ascii-ink: #b2d4ce;
-  --grain: 0.06;
+  --ascii-ink: #c3e0da;
+  --grain: 0.035;
   color-scheme: light;
 }
 
@@ -23,6 +24,7 @@
   :root:not([data-theme="light"]) {
     --bg: #021f2c;
     --surface: #062b3b;
+    --tint: #052736;
     --line: #0f3e52;
     --text: #e2f3f0;
     --muted: #8db4c0;
@@ -38,6 +40,7 @@
 :root[data-theme="dark"] {
   --bg: #021f2c;
   --surface: #062b3b;
+  --tint: #052736;
   --line: #0f3e52;
   --text: #e2f3f0;
   --muted: #8db4c0;
@@ -88,6 +91,17 @@
   transition: border-color 0.3s;
 }
 .btn-ghost:hover { border-color: var(--text); }
+
+/* Secondary-colour bands. Re-pointing the tokens lets every component inside adapt. */
+.band-tint { background: var(--tint); }
+.band-navy {
+  --bg: #00405a; --surface: #064e6c; --line: #1b5d78; --text: #f2faf8;
+  --muted: #a7cbd6; --accent: #fc9412; --accent-strong: #ffad4a; --accent-ink: #00405a;
+  /* Tailwind resolves its colour tokens at :root, so re-point them here too */
+  --color-bg: #00405a; --color-surface: #064e6c; --color-line: #1b5d78; --color-text: #f2faf8;
+  --color-muted: #a7cbd6; --color-accent: #fc9412; --color-accent-ink: #00405a;
+  background: var(--bg); color: var(--text);
+}
 
 /* Italic tagline with bold emphasis, as on the banners */
 .tagline { font-style: italic; font-weight: 300; }

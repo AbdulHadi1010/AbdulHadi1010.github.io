@@ -3,13 +3,14 @@ import { logoGroups, logoSvg } from "../data/logos";
 import SectionHead from "./SectionHead.astro";
 ---
 
+<div class="band-tint">
 <section id="stack" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="stack-title">
   <SectionHead id="stack-title" index="02" label="Toolchain" title="What I build with, <em>day to day.</em>" />
   <div data-reveal class="grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
     {logoGroups.map((g) => (
       <div class="bg-bg p-5">
         <h3 class="label mb-5">{g.group}</h3>
-        <ul class="grid grid-cols-2 gap-x-3 gap-y-4">
+        <ul class="grid grid-cols-2 gap-x-3 gap-y-4 lg:grid-cols-1 xl:grid-cols-2">
           {g.items.map(([key, name]) => (
             <li class="group flex items-center gap-3">
               <span class="grid h-11 w-11 shrink-0 place-items-center rounded-[11px] bg-[#f6f5f2] p-2 text-[#1b1b1b] shadow-[inset_0_0_0_1px_rgba(0,0,0,0.06),0_6px_16px_-10px_rgba(0,0,0,0.5)] transition-transform duration-300 group-hover:-translate-y-1 group-hover:rotate-[-3deg]">
@@ -31,3 +32,4 @@ import SectionHead from "./SectionHead.astro";
     </div>
   </div>
 </section>
+</div>

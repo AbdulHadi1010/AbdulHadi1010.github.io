@@ -5,7 +5,8 @@ const built = new Date().toISOString().slice(0, 10);
 const repo = "https://github.com/AbdulHadi1010/portfolio";
 ---
 
-<footer class="mx-auto max-w-[1320px] px-4 pb-10 pt-16 sm:px-8">
+<div class="band-navy">
+<footer class="mx-auto max-w-[1320px] px-4 pb-10 pt-6 sm:px-8">
   <p aria-hidden="true" class="overflow-hidden whitespace-nowrap font-mono text-[11px] text-line select-none">{"─┼".repeat(120)}</p>
   <div class="mt-6 flex flex-col justify-between gap-4 sm:flex-row">
     <p class="label">© {new Date().getFullYear()} {profile.name}. Built with Astro, shipped by GitHub Actions.</p>
@@ -15,3 +16,4 @@ const repo = "https://github.com/AbdulHadi1010/portfolio";
     </p>
   </div>
 </footer>
+</div>
