@@ -1,0 +1,52 @@
+---
+import { projects, stats } from "../data/profile";
+import SectionHead from "./SectionHead.astro";
+---
+
+<section class="mx-auto max-w-[1320px] px-4 py-24 sm:px-8 md:py-32" aria-labelledby="stats-title">
+  <h2 id="stats-title" class="sr-only">In numbers</h2>
+  <dl class="grid grid-cols-2 border-l border-t border-line md:grid-cols-4">
+    {stats.map((s, i) => (
+      <div data-reveal style={`--d:${i * 90}ms`} class="flex flex-col border-b border-r border-line p-5 sm:p-7">
+        <dt class="label order-2 mt-3 block max-w-[22ch] normal-case tracking-normal">{s.label}</dt>
+        <dd class="font-serif text-[clamp(2.4rem,5vw,4rem)] leading-none">{s.value}</dd>
+      </div>
+    ))}
+  </dl>
+</section>
+
+<section id="work" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 pb-24 sm:px-8 md:pb-32" aria-labelledby="work-title">
+  <SectionHead id="work-title" index="01" label="Selected work" title="Things I built, measured, <em>and wrote down.</em>" />
+
+  <ol class="border-t border-line">
+    {projects.map((p, i) => (
+      <li data-reveal class="group grid grid-cols-1 gap-8 border-b border-line py-10 md:grid-cols-12 md:py-14">
+        <div class="flex gap-6 md:col-span-3 md:flex-col md:gap-2">
+          <span class="label text-accent">{String(i + 1).padStart(2, "0")}</span>
+          <span class="label">{p.kind} · {p.year}</span>
+        </div>
+
+        <div class="md:col-span-5">
+          <h3 class="font-serif text-[clamp(1.8rem,3.2vw,2.7rem)] leading-[1.05]">
+            <a href={p.href} target="_blank" rel="noopener" class="link-u">{p.title}</a>
+          </h3>
+          <p class="mt-5 max-w-[56ch] text-muted">{p.summary}</p>
+          <p class="mt-5 inline-flex items-center gap-2 font-mono text-[13px]">
+            <span class="text-accent" aria-hidden="true">→</span>{p.outcome}
+          </p>
+          <ul class="mt-6 flex flex-wrap gap-1.5" aria-label="Tools">
+            {p.stack.map((t) => <li class="border border-line px-2 py-0.5 font-mono text-[11px] text-muted">{t}</li>)}
+          </ul>
+        </div>
+
+        <figure class="md:col-span-4">
+          <pre class="overflow-x-auto border border-line bg-surface/70 p-4 font-mono text-[11.5px] leading-[1.7] text-muted transition-colors group-hover:border-accent/50 group-hover:text-text" aria-label={`Diagram: ${p.title}`}>{p.diagram.join("\n")}</pre>
+          <figcaption class="label mt-2 flex justify-between">
+            <span>fig. {String(i + 1).padStart(2, "0")}</span>
+            <a href={p.href} target="_blank" rel="noopener" class="hover:text-text" data-scramble>{p.href.includes("github.com") ? "Source" : "Read"} ↗</a>
+          </figcaption>
+        </figure>
+      </li>
+    ))}
+  </ol>
+</section>

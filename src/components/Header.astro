@@ -1,0 +1,32 @@
+---
+import { profile } from "../data/profile";
+const base = import.meta.env.BASE_URL;
+const nav = [
+  { href: "#work", label: "Work" },
+  { href: "#log", label: "Log" },
+  { href: "#writing", label: "Writing" },
+  { href: "#contact", label: "Contact" },
+];
+---
+
+<header class="fixed inset-x-0 top-0 z-50 border-b border-line/60 bg-bg/75 backdrop-blur-md">
+  <div class="mx-auto flex h-14 max-w-[1320px] items-center justify-between gap-4 px-4 sm:px-8">
+    <a href={base} class="group flex items-center gap-2.5" aria-label={`${profile.name}, home`}>
+      <span class="grid h-7 w-7 place-items-center border border-text font-mono text-[11px] font-semibold leading-none transition-colors group-hover:bg-text group-hover:text-bg">AH</span>
+      <span class="hidden font-mono text-[13px] sm:inline" data-scramble>abdul.hadi</span>
+    </a>
+
+    <nav aria-label="Primary" class="flex items-center gap-3.5 sm:gap-7">
+      {nav.map((n) => (
+        <a href={n.href} class="label !text-text/80 hover:!text-text" data-scramble>{n.label}</a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-4">
+      <span class="label hidden md:inline">PKT <span data-clock={profile.timezone}>--:--</span></span>
+      <button type="button" data-theme-toggle class="grid h-7 w-7 place-items-center border border-line text-muted transition-colors hover:border-text hover:text-text" aria-label="Toggle colour theme">
+        <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" /><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" /></svg>
+      </button>
+    </div>
+  </div>
+</header>

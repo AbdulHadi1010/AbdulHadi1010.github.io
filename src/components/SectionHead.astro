@@ -1,0 +1,9 @@
+---
+interface Props { index: string; label: string; title: string; id: string }
+const { index, label, title, id } = Astro.props;
+---
+
+<div data-reveal class="mb-14 grid grid-cols-1 gap-6 border-t border-line pt-5 md:grid-cols-12">
+  <p class="label md:col-span-3"><span class="text-accent">{index}</span> / <span data-scramble-in data-text={label}>{label}</span></p>
+  <h2 id={id} class="font-serif text-[clamp(2.2rem,5vw,4.2rem)] leading-[1] tracking-[-0.015em] md:col-span-9"><Fragment set:html={title} /></h2>
+</div>

@@ -1,0 +1,15 @@
+---
+import Base from "../layouts/Base.astro";
+const base = import.meta.env.BASE_URL;
+---
+
+<Base title="404: not found · Abdul Hadi">
+  <main id="main" class="grid min-h-[100svh] place-items-center px-4">
+    <div class="w-full max-w-xl">
+      <pre class="font-mono text-[13px] leading-[1.7] text-muted" aria-hidden="true">$ kubectl get page {Astro.url.pathname}
+Error from server (NotFound): pages "{Astro.url.pathname}" not found</pre>
+      <h1 class="mt-8 font-serif text-6xl leading-none">Nothing deployed here.</h1>
+      <a href={base} class="link-u mt-8 inline-block font-mono text-sm text-accent">← back to the homepage</a>
+    </div>
+  </main>
+</Base>

@@ -1,0 +1,24 @@
+---
+import { writing, profile } from "../data/profile";
+import SectionHead from "./SectionHead.astro";
+const fmt = new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric" });
+---
+
+<section id="writing" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="writing-title">
+  <SectionHead id="writing-title" index="03" label="Writing" title="Runbooks I wish <em>I'd had.</em>" />
+
+  <ul class="border-t border-line">
+    {writing.map((w, i) => (
+      <li data-reveal style={`--d:${i * 40}ms`}>
+        <a href={w.href} target="_blank" rel="noopener" class="group grid grid-cols-[5.5rem_1fr_auto] items-baseline gap-4 border-b border-line py-5 transition-colors hover:bg-surface/60 sm:grid-cols-[8rem_1fr_auto] sm:px-3">
+          <time datetime={w.date} class="label">{fmt.format(new Date(w.date))}</time>
+          <span class="text-[1.05rem] leading-snug transition-transform duration-300 group-hover:translate-x-1.5 sm:text-lg">{w.title}</span>
+          <span class="font-mono text-muted transition-colors group-hover:text-accent" aria-hidden="true">↗</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+  <p data-reveal class="mt-6 text-right">
+    <a href={profile.links.medium} target="_blank" rel="noopener" class="label hover:!text-text" data-scramble>All posts on Medium ↗</a>
+  </p>
+</section>

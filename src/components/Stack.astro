@@ -1,0 +1,50 @@
+---
+import { stack, log } from "../data/profile";
+import SectionHead from "./SectionHead.astro";
+---
+
+<section id="log" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="log-title">
+  <SectionHead id="log-title" index="02" label="Deploy log" title="Where I've shipped, <em>newest first.</em>" />
+
+  <div class="grid grid-cols-1 gap-14 md:grid-cols-12">
+    <ol class="md:col-span-7">
+      {log.map((e, i) => (
+        <li data-reveal style={`--d:${i * 60}ms`} class="grid grid-cols-[4.5rem_1fr] gap-4 border-b border-line py-6 first:pt-0 sm:grid-cols-[6rem_1fr]">
+          <span class="pt-1 font-mono text-[12px] text-accent">[{e.tag}]</span>
+          <div>
+            <h3 class="text-lg font-medium leading-snug">{e.title} <span class="text-muted">· {e.org}</span></h3>
+            <p class="mt-2 max-w-[60ch] text-[15px] text-muted">{e.detail}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <aside class="md:col-span-5" aria-labelledby="stack-title">
+      <div data-reveal class="sticky top-24 border border-line bg-surface/60">
+        <div class="flex items-center justify-between border-b border-line px-4 py-2.5">
+          <span class="label">kubectl rollout status deploy/portfolio</span>
+          <span class="label text-accent" data-pod-status>48/48 ready</span>
+        </div>
+        <pre data-pods class="px-4 py-5 font-mono text-[15px] leading-[1.6] tracking-[0.1em] text-accent" aria-hidden="true">● ● ● ● ● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ● ● ● ● ●
+● ● ● ● ● ● ● ● ● ● ● ●</pre>
+        <h3 id="stack-title" class="label border-t border-line px-4 pt-4">Toolbox</h3>
+        <dl class="px-4 pb-4">
+          {stack.map((g) => (
+            <div class="grid grid-cols-[7.5rem_1fr] gap-3 border-b border-line/70 py-2.5 last:border-0">
+              <dt class="font-mono text-[12px] text-muted">{g.group}</dt>
+              <dd class="text-[14px]">{g.items.join(" · ")}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<script>
+  import { mountPods } from "../scripts/ascii-pods";
+  const pre = document.querySelector<HTMLElement>("[data-pods]");
+  if (pre) mountPods(pre, document.querySelector<HTMLElement>("[data-pod-status]"));
+</script>
