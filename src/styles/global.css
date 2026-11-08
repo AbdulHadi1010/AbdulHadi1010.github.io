@@ -264,3 +264,16 @@ html.touring [data-reveal][data-held] { opacity: 0 !important; transform: transl
 @media (max-width: 480px) { .agent-progress { display: none; } .agent-status { font-size: 12px; } }
 /* during the agent tour, placed blocks appear quickly */
 html.touring [data-reveal] { transition-duration: 0.35s !important; transition-delay: 0s !important; }
+/* agent build: unbuilt sections take no space; the frontier is the construction zone */
+html.touring [data-pending] { display: none !important; }
+.agent-frontier {
+  margin: 24px auto 48px; width: min(1320px, calc(100% - 32px)); min-height: 46vh;
+  border: 1.5px dashed color-mix(in oklab, var(--accent) 70%, transparent); border-radius: 28px;
+  background: repeating-linear-gradient(-45deg, color-mix(in oklab, var(--accent) 7%, transparent) 0 14px, transparent 14px 28px);
+  display: grid; place-items: center;
+}
+.agent-frontier-inner {
+  display: inline-flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px;
+  background: var(--bg); color: var(--text); border: 1px solid var(--line);
+  font: 600 13px/1 var(--font-sans);
+}

@@ -1,13 +1,13 @@
 // "Agents are building this page" intro + guided tour.
 //
 // Phase 1: four named cursors drag blueprints of the hero blocks into place.
-// Phase 2: the page scrolls itself section by section. At each stop the agents
-// drop whole blocks (a project card, the toolchain grid) and everything inside
-// pops in as a group. The whole site is built in roughly 12-15 seconds.
+// Phase 2: agents keep building the rest, one section every ~2s, while the
+// visitor scrolls at their own pace. Unbuilt sections take no space, so the page
+// ends at a "construction zone" where the agents drag the next blocks in.
 //
 // Plays once per visit (sessionStorage), only when <html> got the `building`
-// class in <head> (skipped for reduced motion and deep links). Any wheel,
-// touch, key or the Skip button hands control back immediately.
+// class in <head> (skipped for reduced motion and deep links). Skip, Esc or
+// a navbar link builds everything at once.
 
 import type Lenis from "lenis";
 
@@ -73,28 +73,46 @@ export function runAgentBuild(lenis: Lenis | null) {
   // ── stop / finish ─────────────────────────────────────────────────────────
   let done = false;
   const held = new Set<HTMLElement>();
-  const userEvents = ["wheel", "touchstart", "keydown"] as const;
-  const onUser = () => finish();
+  const pending = new Set<HTMLElement>();
+  let frontier: HTMLElement | null = null;
   const finish = () => {
     if (done) return;
     done = true;
-    lenis?.stop(); lenis?.start(); // cancel any programmatic scroll in flight
+    pending.forEach((el) => el.removeAttribute("data-pending"));
+    pending.clear();
+    frontier?.remove();
     blocks.forEach((b) => b.classList.add("is-built"));
-    held.forEach((el) => { el.removeAttribute("data-held"); el.classList.add("is-in"); });
+    held.forEach((el) => el.removeAttribute("data-held")); // the normal scroll reveal takes over
+    held.clear();
     root.classList.add("grid-on");
     layer.classList.add("is-leaving");
     status.classList.add("is-leaving");
+    lenis?.resize();
     setTimeout(() => {
       document.querySelectorAll(".rise").forEach((el) => el.classList.remove("rise"));
       root.classList.remove("building", "grid-on", "touring");
       blocks.forEach((b) => b.classList.remove("is-built"));
       layer.remove();
       status.remove();
+      // anything already on screen shows at once
+      document.querySelectorAll<HTMLElement>("[data-reveal]:not(.is-in)").forEach((el) => {
+        const r = el.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) el.classList.add("is-in");
+      });
     }, 700);
-    userEvents.forEach((ev) => window.removeEventListener(ev, onUser));
+    window.removeEventListener("keydown", onKey);
+    document.removeEventListener("click", onNav, true);
+  };
+  // scrolling is how you follow the build, so it no longer ends it
+  const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") finish(); };
+  // a navbar jump to a section that isn't built yet: finish first, then the jump runs
+  const onNav = (e: MouseEvent) => {
+    const a = (e.target as Element).closest?.('a[href*="#"]');
+    if (a && !layer.contains(a)) finish();
   };
   status.querySelector("button")!.addEventListener("click", finish);
-  userEvents.forEach((ev) => window.addEventListener(ev, onUser, { passive: true }));
+  window.addEventListener("keydown", onKey);
+  document.addEventListener("click", onNav, true);
 
   // ── motion helpers ────────────────────────────────────────────────────────
   const EASE = "cubic-bezier(0.45, 0, 0.2, 1)";
@@ -110,15 +128,6 @@ export function runAgentBuild(lenis: Lenis | null) {
     return Promise.all(anims.map((an) => an.finished)).catch(() => {});
   };
   const click = (a: Agent) => a.el.animate([{ scale: 1 }, { scale: 0.82 }, { scale: 1 }], { duration: 90 }).finished.catch(() => {});
-
-  const scrollTo = (el: HTMLElement, offset: number, ms: number) =>
-    new Promise<void>((resolve) => {
-      let settled = false;
-      const end = () => { if (!settled) { settled = true; resolve(); } };
-      if (!lenis) { el.scrollIntoView({ behavior: "smooth", block: "start" }); setTimeout(end, ms); return; }
-      lenis.scrollTo(el, { offset, duration: ms / 1000, easing: (t: number) => 1 - Math.pow(1 - t, 3), onComplete: end, force: true });
-      setTimeout(end, ms + 100);
-    });
 
   const contentRect = (el: HTMLElement, pad = 8) => {
     const box = el.dataset.build === "nav" ? el.querySelector<HTMLElement>("[data-notch-body]") ?? el : el;
@@ -189,12 +198,13 @@ export function runAgentBuild(lenis: Lenis | null) {
 
   // place a whole block: it and everything inside it appears, children pop in as a group
   const POP = "li, figure, .viz, dd, dt, h2, h3, h4, p, pre, a.btn-brand, [data-email-href]";
-  const reveal = (block: HTMLElement) => {
+  const reveal = (block: HTMLElement, animate = true) => {
     [block, ...block.querySelectorAll<HTMLElement>("[data-reveal]")].forEach((el) => {
       el.removeAttribute("data-held");
       held.delete(el);
-      el.classList.add("is-in");
+      if (animate) el.classList.add("is-in");
     });
+    if (!animate) return;
     [...block.querySelectorAll<HTMLElement>(POP)].slice(0, 48).forEach((el, k) => {
       el.animate(
         [{ opacity: 0, transform: "translateY(10px) scale(0.98)" }, { opacity: 1, transform: "none" }],
@@ -209,77 +219,132 @@ export function runAgentBuild(lenis: Lenis | null) {
     return `<${t.replace(/[^\w ·&.,-]/g, "").replace(/\s+/g, " ").trim().slice(0, 30) || "Block"} />`;
   };
 
-  // ── tour stops: each is a list of whole blocks ────────────────────────────
+  // ── build plan: what to un-hide, what to drop, where the frontier sits ────
   const q = <T extends Element = HTMLElement>(sel: string) => document.querySelector<T>(sel);
   const kids = (sel: string) => [...document.querySelectorAll<HTMLElement>(sel)];
-  type Stop = { label: string; blocks: HTMLElement[]; onArrive?: (a: Agent) => Promise<void> };
+  type Stop = { label: string; show: HTMLElement[]; blocks: HTMLElement[]; anchor: HTMLElement; onArrive?: (a: Agent) => Promise<void> };
   const stops: Stop[] = [];
-  const add = (label: string, blocks: (HTMLElement | null | undefined)[], onArrive?: Stop["onArrive"]) => {
+  const add = (label: string, show: (HTMLElement | null | undefined)[], blocks: (HTMLElement | null | undefined)[], anchor?: HTMLElement | null, onArrive?: Stop["onArrive"]) => {
     const b = blocks.filter(Boolean) as HTMLElement[];
-    if (b.length) stops.push({ label, blocks: b, onArrive });
+    const sh = show.filter(Boolean) as HTMLElement[];
+    if (b.length && sh.length) stops.push({ label, show: sh, blocks: b, anchor: anchor ?? sh[sh.length - 1], onArrive });
   };
 
+  const main = q("#main")!;
+  const hero = main.querySelector<HTMLElement>(":scope > section");
+  const marquee = main.querySelector<HTMLElement>(":scope > div[aria-label]");
+  const statsSec = q("#stats-title")?.closest<HTMLElement>("section");
+  const workSec = q("#work");
   const projects = kids("#work > ol > li");
-  add("Impact & selected work", [
-    q("#stats-title")?.parentElement?.querySelector<HTMLElement>("dl"),
+  const more = [...document.querySelectorAll<HTMLElement>("#work h3")].find((h) => h.textContent?.includes("More from"))?.closest<HTMLElement>(".mt-24");
+  const tint = q("#stack")?.parentElement;
+  const logSec = q("#log");
+  const writingSec = q("#writing");
+  const contactBand = q("#contact")?.parentElement;
+  const footerBand = document.querySelector<HTMLElement>("footer")?.parentElement;
+
+  add("Impact & selected work", [marquee, statsSec, workSec, projects[0]], [
+    marquee,
+    statsSec?.querySelector<HTMLElement>("dl"),
     q("#work-title")?.closest<HTMLElement>("[data-reveal]"),
     projects[0],
-  ]);
-  projects.slice(1).forEach((li) => add(li.querySelector("h3")?.textContent?.trim() ?? "Project", [li]));
-  const more = [...document.querySelectorAll<HTMLElement>("#work h3")].find((h) => h.textContent?.includes("More from"))?.closest<HTMLElement>(".mt-24");
-  if (more) add("More from the field", [more.querySelector<HTMLElement>(":scope > [data-reveal]"), ...more.querySelectorAll<HTMLElement>(":scope > .mb-12")]);
-  for (const [id, label] of [["#stack", "Toolchain"], ["#log", "Deploy log"], ["#writing", "Writing"]] as const) {
-    const sec = q(id);
-    if (!sec) continue;
-    const parts = [...sec.children].flatMap((c) => (c.matches(".grid") && id === "#log" ? [...c.children] : [c])) as HTMLElement[];
-    add(label, parts);
-  }
+  ], projects[0]);
+  projects.slice(1).forEach((li) => add(li.querySelector("h3")?.textContent?.trim() ?? "Project", [li], [li]));
+  if (more) add("More from the field", [more], [more.querySelector<HTMLElement>(":scope > [data-reveal]"), ...more.querySelectorAll<HTMLElement>(":scope > .mb-12")]);
+  const parts = (sec: HTMLElement | null) =>
+    sec ? ([...sec.children].flatMap((c) => (c.matches(".grid") && sec.id === "log" ? [...c.children] : [c])) as HTMLElement[]) : [];
+  add("Toolchain", [tint], parts(q("#stack")));
+  add("Deploy log", [logSec], parts(logSec));
+  add("Writing", [writingSec], parts(writingSec));
   const contact = q("#contact");
-  if (contact) {
-    const grid = contact.querySelector<HTMLElement>(":scope > .grid");
-    add("Contact", [contact.querySelector<HTMLElement>(":scope > [data-reveal]"), ...((grid ? [...grid.children] : []) as HTMLElement[])], async (a) => {
-      const btn = q<HTMLButtonElement>('[data-term-cmd="whoami"]');
-      if (!btn) return;
-      const r = btn.getBoundingClientRect();
-      await move(a, r.left + r.width / 2, r.top + r.height / 2, 300);
-      if (done) return;
-      await click(a);
-      btn.click();
-    });
-  }
+  const cgrid = contact?.querySelector<HTMLElement>(":scope > .grid");
+  add("Contact", [contactBand, footerBand], [contact?.querySelector<HTMLElement>(":scope > [data-reveal]"), ...((cgrid ? [...cgrid.children] : []) as HTMLElement[])], contactBand, async (a) => {
+    const btn = q<HTMLButtonElement>('[data-term-cmd="whoami"]');
+    if (!btn) return;
+    const r = btn.getBoundingClientRect();
+    if (r.top > vh() || r.bottom < 0) return;
+    await move(a, r.left + r.width / 2, r.top + r.height / 2, 300);
+    if (done) return;
+    await click(a);
+    btn.click();
+  });
 
-  const tour = async () => {
+  // hide everything that isn't built yet, so the page ends at the frontier
+  const hide = (el: HTMLElement | null | undefined) => { if (el && el !== hero) { el.setAttribute("data-pending", ""); pending.add(el); } };
+  stops.forEach((st) => st.show.forEach(hide));
+  const unhide = (el: HTMLElement) => { el.removeAttribute("data-pending"); pending.delete(el); };
+
+  // the construction zone that sits right after the last built block
+  frontier = document.createElement("div");
+  frontier.className = "agent-frontier";
+  frontier.setAttribute("aria-hidden", "true");
+  frontier.innerHTML = `<div class="agent-frontier-inner"><span class="agent-dot"></span><span data-next>Agents are building the next section…</span></div>`;
+  const nextLabel = frontier.querySelector<HTMLElement>("[data-next]")!;
+  const placeFrontier = (after: HTMLElement, next?: string) => {
+    after.after(frontier!);
+    nextLabel.textContent = next ? `Under construction: ${next}` : "Agents are building the next section…";
+    lenis?.resize();
+  };
+  if (hero) placeFrontier(hero, stops[0]?.label);
+
+  const inView = (el: Element | null, margin = 0) => {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    return r.top < vh() - margin && r.bottom > margin;
+  };
+
+  // agents hang around the frontier when it's on screen, otherwise wait below the fold
+  let parking = false;
+  const park = async () => {
+    if (parking || done || !frontier) return;
+    parking = true;
+    const f = frontier.getBoundingClientRect();
+    const visible = f.top < vh() - 40 && f.bottom > 0;
+    await Promise.all(agents.map((a, k) => {
+      const x = visible ? clamp(f.left + f.width * (0.15 + k * 0.22), 20, vw() - 120) : vw() * (0.2 + k * 0.2);
+      const y = visible ? clamp(f.top + 60 + (k % 2) * 70, 70, vh() - 110) : vh() + 50;
+      return move(a, x, y, 500);
+    }));
+    parking = false;
+  };
+  let parkTimer = 0;
+  const onScroll = () => { clearTimeout(parkTimer); parkTimer = window.setTimeout(park, 140); };
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  const PACE = 2200; // ms between sections: fast enough to stay ahead, slow enough to watch
+  const build = async () => {
     const total = stops.length;
     for (let i = 0; i < total && !done; i++) {
       const stop = stops[i];
-      say(`Building ${stop.label} · ${i + 1}/${total}`);
+      const started = performance.now();
+      say(`Building ${stop.label} · ${i + 1}/${total} · scroll to follow`);
       bar.style.width = `${((i + 1) / total) * 100}%`;
 
-      // frame the stop: centre it if it fits, else start it under the navbar
-      const first = stop.blocks[0];
-      const lastB = stop.blocks[stop.blocks.length - 1];
-      const span = lastB.getBoundingClientRect().bottom - first.getBoundingClientRect().top;
-      const offset = span < vh() - 160 ? -Math.max(80, (vh() - span) / 2) : -80;
-      // agents drift toward the middle while the page scrolls
-      agents.forEach((a, k) => { void move(a, vw() * (0.18 + k * 0.2), vh() * (0.62 + (k % 2) * 0.12), 420); });
-      await scrollTo(first, offset, 320);
-      if (done) return;
+      const wasVisible = inView(frontier, 40);
+      stop.show.forEach(unhide);
+      placeFrontier(stop.anchor, stops[i + 1]?.label);
+      await sleep(30); // let layout settle
 
-      // one agent per block; extra blocks go to whichever agent frees up first
-      const queue = stop.blocks.filter((b) => b.getBoundingClientRect().bottom > 0);
-      const offscreen = stop.blocks.filter((b) => !queue.includes(b));
-      offscreen.forEach(reveal);
-      await Promise.all(agents.map(async (a, k) => {
-        await sleep(k * 40);
-        for (let b = queue.shift(); b && !done; b = queue.shift()) {
-          const r = contentRect(b, 6);
-          const visible = { ...r, h: Math.min(r.h, vh() - Math.max(r.y, 70) - 40) };
-          await drop(a, visible, blockLabel(b, stop.label), () => reveal(b), false, true);
-        }
-      }));
+      // blocks the visitor can see are dragged in; the rest reveal as they scroll to them
+      const onScreen = stop.blocks.filter((b) => inView(b, 60));
+      stop.blocks.filter((b) => !onScreen.includes(b)).forEach((b) => reveal(b, false));
+      if (wasVisible && onScreen.length) {
+        const queue = [...onScreen];
+        await Promise.all(agents.map(async (a, k) => {
+          await sleep(k * 40);
+          for (let b = queue.shift(); b && !done; b = queue.shift()) {
+            const r = contentRect(b, 6);
+            const box = { ...r, h: Math.min(r.h, vh() - Math.max(r.y, 70) - 40) };
+            await drop(a, box, blockLabel(b, stop.label), () => reveal(b), false, true);
+          }
+        }));
+        if (stop.onArrive && !done) await stop.onArrive(agents[0]);
+      } else {
+        onScreen.forEach((b) => reveal(b));
+      }
       if (done) return;
-      if (stop.onArrive) await stop.onArrive(agents[0]);
-      await sleep(40);
+      void park();
+      await sleep(Math.max(0, PACE - (performance.now() - started)));
     }
   };
 
@@ -303,11 +368,15 @@ export function runAgentBuild(lenis: Lenis | null) {
     if (done) return;
     blocks.forEach((b) => b.classList.add("is-built"));
     say("Hero shipped · building the rest");
-    await sleep(120);
-    await tour();
+    void park();
+    await sleep(900);
+    await build();
     if (done) return;
+    window.removeEventListener("scroll", onScroll);
+    frontier?.remove();
+    lenis?.resize();
     const secs = Math.round((performance.now() - t0) / 1000);
-    say(`Built and deployed by 4 agents in ${secs}s`);
+    say(`Site complete · built by 4 agents in ${secs}s`);
     bar.style.width = "100%";
     status.classList.add("is-done");
     await Promise.all(agents.map((a, i) => move(a, i % 2 ? vw() + 60 : -60, a.y + rand(-80, 80), 450)));
