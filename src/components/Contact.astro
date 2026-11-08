@@ -4,7 +4,6 @@ import SectionHead from "./SectionHead.astro";
 
 // Data the terminal can print. Kept server-side so the page ships plain JSON.
 const data = {
-  email: profile.email,
   links: profile.links,
   projects: projects.map((p) => ({ title: p.title, href: p.href, outcome: p.outcome })),
   writing: writing.slice(0, 4).map((w) => ({ title: w.title, href: w.href })),
@@ -21,7 +20,10 @@ const data = {
       <p class="max-w-[40ch] text-lg text-muted">
         Platform builds, cloud migrations, Kubernetes hardening, or getting a model to serve fast on hardware you already pay for. Email is quickest.
       </p>
-      <a href={`mailto:${profile.email}`} class="link-u mt-8 inline-block font-serif text-[clamp(1.35rem,2.4vw,2.1rem)] leading-tight">{profile.email.split("@")[0]}<wbr />@{profile.email.split("@")[1]}</a>
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        <a data-email-href class="link-u whitespace-nowrap text-[clamp(1.05rem,1.7vw,1.35rem)] font-semibold" data-email>Email me</a>
+        <button type="button" data-copy-email class="rounded-full border border-line px-3 py-1 text-[12px] font-medium text-muted transition-colors hover:border-accent hover:text-text" aria-label="Copy my email address"><span data-copy-label>Copy</span></button>
+      </div>
       <ul class="mt-10 grid grid-cols-2 gap-px border border-line bg-line">
         {Object.entries(profile.links).map(([k, v]) => (
           <li class="bg-bg">
@@ -60,8 +62,8 @@ const data = {
 <script type="application/json" id="term-data" set:html={JSON.stringify(data)} />
 
 <script>
+  import { email } from "../scripts/email";
   type Data = {
-    email: string;
     links: Record<string, string>;
     projects: { title: string; href: string; outcome: string }[];
     writing: { title: string; href: string }[];
@@ -93,7 +95,7 @@ const data = {
     stack: () => data.stack.map(esc).join("\n"),
     writing: () => data.writing.map((w) => `·  ${link(w.href, w.title)}`).join("\n"),
     contact: () =>
-      [`email     ${link("mailto:" + data.email, data.email)}`, ...Object.entries(data.links).map(([k, v]) => `${k.padEnd(9)} ${link(v)}`)].join("\n"),
+      [`email     ${link("mailto:" + email(), email())}`, ...Object.entries(data.links).map(([k, v]) => `${k.padEnd(9)} ${link(v)}`)].join("\n"),
     ls: () => "about.txt  projects/  writing/  contact.txt",
     "cat about.txt": () => commands.whoami(),
     "sudo rm -rf /": () => "nice try. this filesystem is read-only and deployed from git.",

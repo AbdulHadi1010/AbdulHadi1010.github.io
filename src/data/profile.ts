@@ -7,7 +7,6 @@ export const profile = {
   title: "Solutions Architect at SazebTech Consulting",
   location: "Pakistan",
   timezone: "Asia/Karachi",
-  email: "abdulhadi.conulting@gmail.com",
   links: {
     github: "https://github.com/AbdulHadi1010",
     linkedin: "https://www.linkedin.com/in/abdulhadi-cloud/",
@@ -36,12 +35,14 @@ export type Project = {
   outcome: string;
   stack: string[];
   href: string;
+  logos: string[]; // keys from src/assets/logos, shown as the card badge
   diagram: string[]; // tiny ASCII architecture, one line per row
 };
 
 export const projects: Project[] = [
   {
     slug: "secure-but-broken",
+    logos: ["kubernetes", "aws", "terraform"],
     kind: "Research",
     year: "2026",
     title: "Secure but Broken?",
@@ -60,6 +61,7 @@ export const projects: Project[] = [
   },
   {
     slug: "eks-storage",
+    logos: ["aws", "kubernetes"],
     kind: "Production",
     year: "2025",
     title: "EKS storage, 1,500 → 127,000 IOPS",
@@ -75,6 +77,7 @@ export const projects: Project[] = [
   },
   {
     slug: "llm-on-cpu",
+    logos: ["aws", "ollama", "linux"],
     kind: "AI infra",
     year: "2025",
     title: "Local LLMs on AWS CPU instances",
@@ -90,6 +93,7 @@ export const projects: Project[] = [
   },
   {
     slug: "study-assistant",
+    logos: ["aws", "python"],
     kind: "Workshop",
     year: "2026",
     title: "Serverless AI study assistant",
@@ -106,6 +110,7 @@ export const projects: Project[] = [
   },
   {
     slug: "k8s-ansible",
+    logos: ["ansible", "kubernetes", "ubuntu"],
     kind: "Automation",
     year: "2025",
     title: "Kubernetes clusters from bare VMs",

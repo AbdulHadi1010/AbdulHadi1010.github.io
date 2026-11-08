@@ -1,4 +1,5 @@
 import Lenis from "lenis";
+import { initEmail } from "./email";
 
 const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const GLYPHS = "-=+*#%/\\<>_.:01";
@@ -109,23 +110,6 @@ function initTheme() {
   });
 }
 
-// ── copy email ───────────────────────────────────────────────────────────────
-function initCopy() {
-  document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((b) => {
-    const label = b.querySelector<HTMLElement>("[data-copy-label]") ?? b;
-    const original = label.textContent ?? "";
-    b.addEventListener("click", async () => {
-      try {
-        await navigator.clipboard.writeText(b.dataset.copy!);
-        scramble(label, "copied", 300);
-      } catch {
-        window.location.href = `mailto:${b.dataset.copy}`;
-      }
-      setTimeout(() => scramble(label, original, 300), 1600);
-    });
-  });
-}
-
 // ── hero globe (lazy, only when WebGL2 exists) ───────────────────────────────
 async function initGlobe() {
   const canvas = document.querySelector<HTMLCanvasElement>("[data-ascii-globe]");
@@ -146,5 +130,5 @@ initHoverScramble();
 initRotator();
 initClock();
 initTheme();
-initCopy();
+initEmail();
 initGlobe();
