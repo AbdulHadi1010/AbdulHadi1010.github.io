@@ -60,7 +60,7 @@ import SectionHead from "./SectionHead.astro";
       <div class="mb-12">
         <p data-reveal class="label mb-4">{g.group}</p>
         <ul data-reveal class="grid grid-cols-1 gap-px border border-line bg-line md:grid-cols-2 xl:grid-cols-3">
-          {g.items.map((it, i) => (
+          {g.items.map((it) => (
             <li class="group flex flex-col bg-bg p-6 transition-colors hover:bg-surface">
               <div class="mb-5 flex items-center gap-2">
                 {it.logos.map((k) => <span class="block h-6 w-6 text-text" set:html={logoSvg(k)} />)}

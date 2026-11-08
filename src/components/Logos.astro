@@ -6,7 +6,7 @@ import SectionHead from "./SectionHead.astro";
 <section id="stack" class="mx-auto max-w-[1320px] scroll-mt-20 px-4 py-24 sm:px-8 md:py-32" aria-labelledby="stack-title">
   <SectionHead id="stack-title" index="02" label="Toolchain" title="What I build with, <em>day to day.</em>" />
   <div data-reveal class="grid grid-cols-1 gap-px border border-line bg-line sm:grid-cols-2 lg:grid-cols-4">
-    {logoGroups.map((g, gi) => (
+    {logoGroups.map((g) => (
       <div class="bg-bg p-5">
         <h3 class="label mb-5">{g.group}</h3>
         <ul class="grid grid-cols-2 gap-x-3 gap-y-4">

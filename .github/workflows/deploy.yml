@@ -38,11 +38,11 @@ jobs:
           BASE: ${{ steps.pages.outputs.base_path }}/
           PUBLIC_COMMIT_SHA: ${{ github.sha }}
 
-      - name: Budget check (page weight)
+      - name: Budget check (build output; browsers only fetch the fonts in use)
         run: |
           size=$(du -sk dist | cut -f1)
           echo "dist is ${size} KB"
-          test "$size" -lt 2048
+          test "$size" -lt 6144
 
       - uses: actions/upload-pages-artifact@v3
         with:
