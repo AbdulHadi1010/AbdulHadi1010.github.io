@@ -10,6 +10,7 @@
 // a navbar link builds everything at once.
 
 import type Lenis from "lenis";
+import { mountFrontierAscii } from "./frontier-ascii";
 
 type Agent = { name: string; color: string; ink: string; el: HTMLElement; x: number; y: number };
 
@@ -75,12 +76,14 @@ export function runAgentBuild(lenis: Lenis | null) {
   const held = new Set<HTMLElement>();
   const pending = new Set<HTMLElement>();
   let frontier: HTMLElement | null = null;
+  let sceneStop: (() => void) | null = null;
   const finish = () => {
     if (done) return;
     done = true;
     pending.forEach((el) => el.removeAttribute("data-pending"));
     pending.clear();
     frontier?.remove();
+    sceneStop?.();
     blocks.forEach((b) => b.classList.add("is-built"));
     held.forEach((el) => el.removeAttribute("data-held")); // the normal scroll reveal takes over
     held.clear();
@@ -278,14 +281,15 @@ export function runAgentBuild(lenis: Lenis | null) {
   frontier = document.createElement("div");
   frontier.className = "agent-frontier";
   frontier.setAttribute("aria-hidden", "true");
-  frontier.innerHTML = `<div class="agent-frontier-inner"><span class="agent-dot"></span><span data-next>Agents are building the next section…</span></div>`;
+  frontier.innerHTML = `<div class="agent-frontier-inner"><span class="agent-dot"></span><span data-next>Agents are building the next section…</span></div><pre class="frontier-ascii"></pre>`;
   const nextLabel = frontier.querySelector<HTMLElement>("[data-next]")!;
   const placeFrontier = (after: HTMLElement, next?: string) => {
     after.after(frontier!);
-    nextLabel.textContent = next ? `Under construction: ${next}` : "Agents are building the next section…";
+    nextLabel.textContent = next ? `Next up: ${next}` : "Agents are building the next section…";
     lenis?.resize();
   };
   if (hero) placeFrontier(hero, stops[0]?.label);
+  sceneStop = mountFrontierAscii(frontier.querySelector<HTMLElement>(".frontier-ascii")!).stop;
 
   const inView = (el: Element | null, margin = 0) => {
     if (!el) return false;
@@ -301,8 +305,10 @@ export function runAgentBuild(lenis: Lenis | null) {
     const f = frontier.getBoundingClientRect();
     const visible = f.top < vh() - 40 && f.bottom > 0;
     await Promise.all(agents.map((a, k) => {
-      const x = visible ? clamp(f.left + f.width * (0.15 + k * 0.22), 20, vw() - 120) : vw() * (0.2 + k * 0.2);
-      const y = visible ? clamp(f.top + 60 + (k % 2) * 70, 70, vh() - 110) : vh() + 50;
+      // wait at the left and right edges so the ASCII scene stays visible
+      const left = k < 2;
+      const x = visible ? clamp(left ? f.left + 24 : f.right - 150, 20, vw() - 140) : vw() * (0.2 + k * 0.2);
+      const y = visible ? clamp(f.top + 70 + (k % 2) * 90, 70, vh() - 110) : vh() + 50;
       return move(a, x, y, 500);
     }));
     parking = false;
@@ -373,6 +379,7 @@ export function runAgentBuild(lenis: Lenis | null) {
     await build();
     if (done) return;
     window.removeEventListener("scroll", onScroll);
+    sceneStop?.();
     frontier?.remove();
     lenis?.resize();
     const secs = Math.round((performance.now() - t0) / 1000);
