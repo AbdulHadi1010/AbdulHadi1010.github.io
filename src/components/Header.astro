@@ -20,25 +20,25 @@ const nav = [
   <div class="notch pointer-events-auto relative" data-notch-body>
     <div class="flex h-[52px] items-center gap-2 pl-3 pr-2 sm:gap-6 sm:pl-4">
       <a href={base} class="group flex items-center gap-2.5 pr-1" aria-label={`${profile.name}, home`}>
-        <span class="grid h-7 w-7 place-items-center rounded-[7px] bg-accent text-[11px] font-bold leading-none text-[#00405a]">AH</span>
-        <span class="hidden text-[15px] font-semibold tracking-[-0.01em] sm:inline">Abdul Hadi</span>
+        <span class="grid h-8 w-8 place-items-center rounded-[9px] bg-[#00405a] text-[11px] font-bold leading-none text-white"><span>A<span class="text-[#fc9412]">H</span></span></span>
+        <span class="hidden text-[15px] font-semibold tracking-[-0.01em] text-[#00405a] sm:inline">Abdul Hadi</span>
       </a>
 
       <nav aria-label="Primary" class="hidden items-center gap-1 md:flex">
         {nav.map((n) => (
-          <a href={href(n.href)} class="rounded-full px-3 py-1.5 text-[14px] opacity-75 transition-[opacity,background] hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100">{n.label}</a>
+          <a href={href(n.href)} class="nav-link relative rounded-full px-3 py-1.5 text-[14px] font-medium text-[#3d6577] transition-colors hover:text-[#00405a]">{n.label}</a>
         ))}
       </nav>
 
-      <div class="ml-auto flex items-center gap-1.5 sm:ml-0">
-        <span class="hidden px-2 font-mono text-[11px] tracking-wider opacity-60 lg:inline">PKT <span data-clock={profile.timezone}>--:--</span></span>
-        <button type="button" data-theme-toggle class="grid h-8 w-8 place-items-center rounded-full opacity-75 transition hover:bg-[color-mix(in_oklab,var(--notch-ink)_10%,transparent)] hover:opacity-100" aria-label="Toggle colour theme">
+      <div class="ml-auto flex items-center gap-1.5">
+        <span class="hidden rounded-full bg-[#e2f3f0] px-2.5 py-1 font-mono text-[11px] tracking-wider text-[#3d6577] lg:inline">PKT <span data-clock={profile.timezone}>--:--</span></span>
+        <button type="button" data-theme-toggle class="grid h-8 w-8 place-items-center rounded-full text-[#00405a] transition hover:bg-[#e2f3f0]" aria-label="Toggle colour theme">
           <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" /><path d="M8 1.5a6.5 6.5 0 0 1 0 13z" fill="currentColor" /></svg>
         </button>
-        <a href={href("#contact")} class="hidden items-center gap-2 rounded-full bg-accent px-4 py-2 text-[14px] font-bold italic text-[#00405a] transition-transform hover:scale-[1.03] sm:inline-flex">
-          Hire me <span aria-hidden="true">→</span>
+        <a href={href("#contact")} class="hidden items-center gap-2 rounded-full border-[1.5px] border-[#fc9412] bg-[#00405a] px-4 py-[7px] text-[14px] font-bold italic text-white shadow-[0_10px_20px_-12px_#00405a] transition-transform hover:-translate-y-px sm:inline-flex">
+          Hire me <span class="text-[#fc9412]" aria-hidden="true">→</span>
         </a>
-        <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" class="grid h-8 w-8 place-items-center rounded-full md:hidden" aria-label="Open menu">
+        <button type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu" class="grid h-8 w-8 place-items-center rounded-full text-[#00405a] md:hidden" aria-label="Open menu">
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path data-menu-icon d="M2 5h12M2 11h12" stroke="currentColor" stroke-width="1.5" fill="none" /></svg>
         </button>
       </div>
@@ -48,7 +48,7 @@ const nav = [
       <nav aria-label="Mobile" class="overflow-hidden">
         <ul class="flex flex-col gap-0.5 px-3 pb-4 pt-1">
           {[...nav, { href: "#contact", label: "Contact" }].map((n) => (
-            <li><a href={href(n.href)} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em]" data-menu-link>{n.label}</a></li>
+            <li><a href={href(n.href)} class="block rounded-xl px-3 py-2.5 text-[22px] font-semibold tracking-[-0.02em] text-[#00405a] hover:bg-[#e2f3f0]" data-menu-link>{n.label}</a></li>
           ))}
         </ul>
       </nav>
@@ -58,15 +58,15 @@ const nav = [
 
 <style>
   .notch {
-    --notch: var(--navy);
-    --notch-ink: #e2f3f0;
+    --notch: #ffffff;
+    --notch-ink: #00405a;
     --r: 18px;
     background: var(--notch);
     color: var(--notch-ink);
     border-radius: 0 0 var(--r) var(--r);
     width: min(860px, calc(100vw - 2 * var(--r) - 8px));
     transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-    box-shadow: 0 18px 40px -24px rgb(0 0 0 / 0.45);
+    box-shadow: 0 14px 34px -22px rgb(0 64 90 / 0.45);
   }
   /* concave shoulders: a square with a radial cut-out on each side */
   .notch::before,
@@ -76,7 +76,7 @@ const nav = [
     top: 0;
     width: var(--r);
     height: var(--r);
-    background: radial-gradient(circle at 0 100%, transparent calc(var(--r) - 0.5px), var(--notch) var(--r));
+    background: radial-gradient(circle at 100% 100%, transparent calc(var(--r) - 0.5px), var(--notch) var(--r));
   }
   .notch::before { right: 100%; transform: scaleX(-1); }
   .notch::after { left: 100%; }
@@ -85,6 +85,13 @@ const nav = [
   }
   [data-notch].is-hidden .notch { transform: translateY(-110%); }
   [data-menu].is-open { grid-template-rows: 1fr; }
+  /* orange marker under the hovered / current link */
+  .nav-link::after {
+    content: ""; position: absolute; left: 50%; bottom: 1px; width: 5px; height: 5px;
+    border-radius: 99px; background: #fc9412; transform: translateX(-50%) scale(0); transition: transform 0.25s;
+  }
+  .nav-link:hover::after, .nav-link[aria-current="true"]::after { transform: translateX(-50%) scale(1); }
+  .nav-link[aria-current="true"] { color: #00405a; }
 </style>
 
 <script>
@@ -102,6 +109,17 @@ const nav = [
   toggle.addEventListener("click", () => setOpen(!menu.classList.contains("is-open")));
   menu.querySelectorAll("[data-menu-link]").forEach((a) => a.addEventListener("click", () => setOpen(false)));
   document.addEventListener("keydown", (e) => e.key === "Escape" && setOpen(false));
+
+  // highlight the link for the section in view
+  const links = [...document.querySelectorAll<HTMLAnchorElement>(".nav-link")];
+  const sections = links.map((a) => document.querySelector<HTMLElement>(a.hash)).filter(Boolean) as HTMLElement[];
+  const spy = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      links.forEach((a) => a.setAttribute("aria-current", String(a.hash === "#" + e.target.id)));
+    }
+  }, { rootMargin: "-45% 0px -50% 0px" });
+  sections.forEach((s) => spy.observe(s));
 
   // tuck away while scrolling down, return on scroll up
   let last = window.scrollY;
