@@ -2,8 +2,8 @@ import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 
-// Served on the custom domain via GitHub Pages (override with SITE / BASE env vars)
-const site = process.env.SITE ?? "https://abdul-hadi.me";
+// Served on GitHub Pages at the user site URL (override with SITE / BASE env vars)
+const site = process.env.SITE ?? "https://abdulhadi1010.github.io";
 const base = process.env.BASE ?? "/";
 
 export default defineConfig({

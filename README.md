@@ -1,8 +1,8 @@
-# abdul-hadi.me
+# abdulhadi1010.github.io
 
 Personal site of Abdul Hadi: cloud, DevOps and AI infrastructure engineer.
 
-**Live:** https://abdul-hadi.me (repo: `AbdulHadi1010.github.io`, deployed by GitHub Actions to GitHub Pages)
+**Live:** https://abdulhadi1010.github.io (repo: `AbdulHadi1010.github.io`, deployed by GitHub Actions to GitHub Pages)
 
 ## Stack
 
@@ -53,7 +53,7 @@ npm run build      # astro check + static build into dist/
 Push to `main`. The workflow in `.github/workflows/deploy.yml` builds and publishes to
 GitHub Pages. In the repository settings, Pages → Source must be **GitHub Actions**.
 
-The custom domain `abdul-hadi.me` is set in `public/CNAME` and in the repository's Pages settings.
+No custom domain is set. To add one, put it in `public/CNAME`, set it in the repository's Pages settings, and verify it under GitHub account settings > Pages so no other repository can claim it.
 
 ## SEO and AI visibility
 

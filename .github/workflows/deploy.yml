@@ -35,7 +35,7 @@ jobs:
         run: npm run build
         env:
           # pinned: Pages reports http:// until "Enforce HTTPS" is on, and canonical URLs must be https
-          SITE: https://abdul-hadi.me
+          SITE: https://abdulhadi1010.github.io
           BASE: /
           PUBLIC_COMMIT_SHA: ${{ github.sha }}
 
